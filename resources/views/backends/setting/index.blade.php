@@ -975,7 +975,7 @@
                                                             @else
                                                                 {{ asset('uploads/image/default.png') }} @endif
                                                             "
-                                                                    alt="" height="150px" width="190px">
+                                                                    alt="" height="150px" width="190px" style="object-fit: cover;">
                                                             </div>
                                                             <div class="custom-file">
                                                                 <input type="file" class="custom-file-input"
@@ -985,24 +985,6 @@
                                                             </div>
                                                         </div>
                                                     </div>
-                                                    {{-- <div class="col-4">
-                                                    <div class="form-group">
-                                                        <label for="web_banner_logo">{{ __('Website banner logo') }}</label>
-                                                        <div class="preview">
-                                                            <img src="
-                                                            @if ($web_banner_logo && file_exists('uploads/business_settings/' . $web_banner_logo))
-                                                                {{ asset('uploads/business_settings/'. $web_banner_logo) }}
-                                                            @else
-                                                                {{ asset('uploads/image/default.png') }}
-                                                            @endif
-                                                            " alt="" height="120px">
-                                                        </div>
-                                                        <div class="custom-file">
-                                                            <input type="file" class="custom-file-input" id="customFile" name="web_banner_logo">
-                                                            <label class="custom-file-label" for="customFile">{{ __('Choose file') }}</label>
-                                                        </div>
-                                                    </div>
-                                                </div> --}}
                                                     <div class="col-6">
                                                         <div class="form-group">
                                                             <label for="fav_icon">{{ __('Fav icon') }}</label>
@@ -1012,7 +994,7 @@
                                                             @else
                                                                 {{ asset('uploads/image/default.png') }} @endif
                                                             "
-                                                                    alt="" height="150px" width="190px">
+                                                                    alt="" height="150px" width="190px" style="object-fit: cover;">
                                                             </div>
                                                             <div class="custom-file">
                                                                 <input type="file" class="custom-file-input"
