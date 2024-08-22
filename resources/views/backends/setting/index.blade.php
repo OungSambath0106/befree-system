@@ -975,7 +975,7 @@
                                                             @else
                                                                 {{ asset('uploads/image/default.png') }} @endif
                                                             "
-                                                                    alt="" height="150px" width="500px">
+                                                                    alt="" height="150px" width="190px">
                                                             </div>
                                                             <div class="custom-file">
                                                                 <input type="file" class="custom-file-input"
@@ -1012,7 +1012,7 @@
                                                             @else
                                                                 {{ asset('uploads/image/default.png') }} @endif
                                                             "
-                                                                    alt="" height="150px" width="500px">
+                                                                    alt="" height="150px" width="190px">
                                                             </div>
                                                             <div class="custom-file">
                                                                 <input type="file" class="custom-file-input"

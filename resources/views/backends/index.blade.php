@@ -24,7 +24,7 @@
         <div class="py-3">
             {{-- <h2>Wellcome to , {{ session()->get('company_name') }}</h2> --}}
         </div>
-        <!-- <div class="row">
+        <div class="row">
             <div class="col-lg-3 col-sm-6">
                 <div
                     class="small-box bg-white d-flex p-3 justify-content-between align-items-center dashboard_summary_box dashboard_shadow">
@@ -125,95 +125,8 @@
                 </div>
             </div>
 
-        </div> -->
-    </section>
-
-    <!-- <section class="px-3">
-        <div class="row">
-            <div class="col-md-6 col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="row align-items-center">
-                            <div class="col-sm-6">
-                                <h3 class="card-title">{{ __('Top 5 Homestay') }}</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body p-0 table-wrapper">
-                        <table class="table">
-                            <thead class="text-uppercase">
-                                <tr>
-                                    <th>#</th>
-                                    <th class="">{{ __('Thumbnail') }}</th>
-                                    <th>{{ __('Title') }}</th>
-                                    <th>{{ __('Total Booking') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($top_book_homestays as $room)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>
-                                            <img src="
-                                        @if ($room->thumbnail && file_exists(public_path('uploads/room/' . $room->thumbnail))) {{ asset('uploads/room/' . $room->thumbnail) }}
-                                        @else
-                                            {{ asset('uploads/image/default.png') }} @endif
-                                        "
-                                                alt="" class="profile_img_table">
-                                        </td>
-                                        <td>{{ $room->title }}</td>
-                                        <td>{{ $room->transactions_count }}</td>
-
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <div class="col-md-6 col-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="row align-items-center">
-                            <div class="col-sm-6">
-                                <h3 class="card-title">{{ __('Latest Booking') }}</h3>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="card-body p-0 table-wrapper">
-                        <table class="table">
-                            <thead class="text-uppercase">
-                                <tr>
-                                    <th>#</th>
-                                    <th>{{ __('Homestay') }}</th>
-                                    <th class="">{{ __('Customer Name') }}</th>
-                                    <th class="text-center">{{ __('Package') }}</th>
-                                    <th>{{ __('Final Total') }}</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach ($lates_bookings as $booking)
-                                    <tr>
-                                        <td>{{ $loop->iteration }}</td>
-                                        <td>{{ @$booking->room->title }}</td>
-                                        <td>{{ @$booking->guest_info['first_name'] . ' ' . @$booking->guest_info['last_name'] }}
-                                        </td>
-                                        <td class="text-center">
-                                            {{ @$booking->ratePlan->type == 'package' ? @$booking->ratePlan->title : '-' }}
-                                        </td>
-                                        <td>{{ @$booking->final_total }}</td>
-
-                                    </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
         </div>
-
-    </section> -->
+    </section>
 @endsection
 @push('js')
 @endpush

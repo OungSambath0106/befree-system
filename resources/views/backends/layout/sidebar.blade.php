@@ -6,7 +6,7 @@
         $setting = App\Models\BusinessSetting::all();
         $web_header_logo = $setting->where('type', 'web_header_logo')->first()->value ?? '';
     @endphp
-    <a href="{{ route('admin.highlight.index') }}" class="brand-link" style="">
+    <a href="{{ route('admin.dashboard') }}" class="brand-link" style="">
         <img src="@if ($web_header_logo && file_exists('uploads/business_settings/' . $web_header_logo)) {{ asset('uploads/business_settings/' . $web_header_logo) }}
         @else
             {{ asset('uploads/image/default.png') }} @endif"
@@ -35,7 +35,7 @@
                 data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-                {{-- <li class="nav-item">
+                <li class="nav-item">
                     <a href="{{ route('admin.dashboard') }}"
                         class="nav-link @if (request()->routeIs('admin.dashboard')) active @endif">
                         @include('svgs.dashboard')
@@ -44,7 +44,7 @@
 
                         </p>
                     </a>
-                </li> --}}
+                </li>
 
                 @if (auth()->user()->can('highlight.view'))
                     <li class="nav-item">

@@ -4,40 +4,23 @@ use App\Models\Comment;
 use App\Models\Category;
 use App\Models\ContactUs;
 use App\Models\Transaction;
-use App\Models\BlogCategory;
-use App\Models\MenuCategory;
 use App\Models\Notification;
-use App\helpers\ImageManager;
-use App\Models\BoothCategory;
 use App\helpers\GlobalFunction;
 use App\Models\BusinessSetting;
-use App\Models\PartnerCategory;
-use Illuminate\Routing\RouteGroup;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Backends\PageController;
-use App\Http\Controllers\PackageController;
-use App\Http\Controllers\Web\HomeController;
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\Web\VisitorController;
 use App\Http\Controllers\Backends\SectionTitleController;
 use App\Http\Controllers\Backends\BlogController;
 use App\Http\Controllers\Backends\MenuController;
 use App\Http\Controllers\Backends\RoleController;
 use App\Http\Controllers\Backends\RoomController;
 use App\Http\Controllers\Backends\UserController;
-use App\Http\Controllers\Web\ExhibitorController;
-use App\Http\Controllers\Backends\BoothController;
-use App\Http\Controllers\Backends\EventController;
-use App\Http\Controllers\Backends\MediaController;
-use App\Http\Controllers\Backends\MovieController;
-use App\Http\Controllers\Web\ExhibitionController;
-use App\Http\Controllers\Backends\NoticeController;
 use App\Http\Controllers\Backends\ReportController;
 use App\Http\Controllers\Backends\SliderController;
 use App\Http\Controllers\Backends\BlogTagController;
 use App\Http\Controllers\Backends\CommentController;
 use App\Http\Controllers\Backends\GalleryController;
-use App\Http\Controllers\Backends\ProductController;
 use App\Http\Controllers\Backends\ServiceController;
 use App\Http\Controllers\Backends\CategoryController;
 use App\Http\Controllers\Backends\CustomerController;
@@ -46,25 +29,17 @@ use App\Http\Controllers\Backends\LanguageController;
 use App\Http\Controllers\Backends\RatePlanController;
 use App\Http\Controllers\Backends\ContactUsController;
 use App\Http\Controllers\Backends\DashboardController;
-use App\Http\Controllers\Frontends\FrontendController;
-use App\Http\Controllers\Backends\NewsletterController;
-use App\Http\Controllers\Backends\EventDetailController;
 use App\Http\Controllers\Backends\FileManagerController;
 use App\Http\Controllers\Backends\MenuExploreController;
 use App\Http\Controllers\Backends\BlogCategoryController;
 use App\Http\Controllers\Backends\ExtraServiceController;
-use App\Http\Controllers\Backends\MenuCategoryController;
-use App\Http\Controllers\Backends\PhotoGalleryController;
 use App\Http\Controllers\Backends\RoomCalendarController;
-use App\Http\Controllers\Backends\BoothCategoryController;
-use App\Http\Controllers\Frontends\CustomerAuthController;
 use App\Http\Controllers\Backends\BusinessSettingController;
 use App\Http\Controllers\Backends\HighlightContoller;
 use App\Http\Controllers\Backends\HomeStayAmenityController;
 use App\Http\Controllers\Backends\RoomAllotmentCalendarController;
 use App\Http\Controllers\Backends\StaycationController;
-use App\Http\Controllers\Frontends\CustomerResetPasswordController;
-use App\Http\Controllers\Frontends\CustomerForgotPasswordController;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -85,6 +60,10 @@ Route::get('language/{locale}', function ($locale) {
     session()->put('language_settings', $language);
     return redirect()->back();
 })->name('change_language');
+
+Route::get('/', function () {
+    return redirect('/login');
+});
 
 Auth::routes();
 
@@ -297,80 +276,3 @@ Route::middleware(['auth','CheckUserLogin', 'SetSessionData'])->group(function (
 Route::middleware(['auth:web'])->group(function () {
     Route::get('/logout', [LoginController::class,'logout'])->name('logout');
 });
-
-Route::controller(FrontendController::class)->group(function () {
-    Route::get('/', 'home')->name('homepage');
-    Route::get('/villas', 'homeStay')->name('homestays');
-    Route::get('/villas-search', 'homeStaySearch')->name('homestay.search');
-    Route::get('/villas/{id}', 'homeStayDetail')->name('homestay_detail');
-    Route::get('/homestay_check_available', 'checkHomestayAvailable')->name('homestay_detail_check_available');
-    Route::get('/about-us', 'aboutUs')->name('about-us');
-    Route::get('/foundations', 'blog')->name('blog');
-    Route::get('/foundation/{id}', 'blogDetail')->name('blog.detail');
-    Route::get('/experiences', 'service')->name('service');
-    Route::get('/experiences/{id}', 'service_detail')->name('service_detail');
-    Route::get('/the-properties', 'facility')->name('facility');
-    Route::get('/gallery', 'gallery')->name('gallery');
-    Route::get('/offers', 'package')->name('package');
-    Route::get('/offers/{id}', 'packageDetail')->name('package.detail');
-    Route::get('/check-status', 'checkLoginStatus')->name('check_login_status');
-});
-
-Route::controller(CustomerAuthController::class)->group(function () {
-    Route::get('/customer/login', 'loginForm')->name('customer.login');
-    Route::post('/customer/login-store', 'login')->name('customer.login.store');
-    Route::get('/customer/register', 'registerForm')->name('customer.register');
-    Route::post('/customer/register-store', 'register')->name('customer.register.store');
-    Route::get('/customer/profile', 'profile')->name('customer.profile');
-    Route::post('/customer/profile-update', 'profileUpdate')->name('customer.profile.update');
-    Route::post('/customer/logout', 'logout')->name('customer.logout');
-});
-
-Route::controller(CommentController::class)->group(function () {
-    Route::post('/comment/store', 'send')->name('comment.send');
-    Route::post('/comment/reply/{id}', 'reply')->name('comment.reply');
-});
-
-Route::controller(ContactUsController::class)->group(function () {
-    Route::get('/contact-us', 'index')->name('contact-us');
-    Route::post('/contact-us/store', 'store')->name('contact-us.store');
-});
-Route::get('/customer/forget-password',[CustomerForgotPasswordController::class, 'showFormResetPassword'])->name('customer.forget.password');
-Route::post('/customer/forget-password-store',[CustomerForgotPasswordController::class, 'resetPassword'])->name('customer.forget.password.store');
-Route::get('/customer/reset-password/{token}',[CustomerResetPasswordController::class,'resetPasswordForm'] )->name('customer.reset.password');
-Route::post('/customer/reset-password-store',[CustomerResetPasswordController::class, 'resetPasswordSubmit'])->name('customer.reset.password.store');
-
-
-// route for static page
-// Route::get('/booking-history', function () {return view('frontends.booking-history.booking-history'); })->name('booking-history');
-
-// Route::get('/blog/{slug}', function () {return view('frontends.blog.blog_detail'); })->name('blog_detail');
-
-
-// Route::get('/contact', function () {return view('frontends.contact.contact'); })->name('contact');
-
-// Route::get('/profile', function () {return view('frontends.users.profile'); })->name('profile');
-
-// Route::get('/reset-password', function () {return view('frontends.users.reset-password'); })->name('reset-password');
-
-Route::get('/book_now', [FrontendController::class, 'bookNow'])->name('book_now');
-// Route::get('/checkout', [FrontendController::class, 'checkoutForm'])->name('checkout_form');
-Route::post('/checkout', [FrontendController::class, 'postCheckout'])->name('post_checkout');
-Route::get('/show_booking_success', [FrontendController::class, 'showBookingSuccess'])->name('show_booking_success');
-Route::get('/bookin_history', [FrontendController::class, 'bookingHistory'])->name('booking_history');
-
-
-//booking
-Route::post('/new-checkout', [FrontendController::class, 'newpostCheckout'])->name('new_post_checkout');
-
-Route::get('/checkout/{id}', [FrontendController::class, 'checkoutForm'])->name('checkout_form');
-
-
-Route::post('/checkavailability', [FrontendController::class, 'checkRoomAvailability'])->name('checkavailability');
-
-// routes/web.php
-
-// Route::get('/confirm-booking', function () {return view('frontends.booking.booking-confirm'); })->name('confirm-booking');
-
-// Route::get('/search', function () {return view('frontends.search.search'); })->name('search');
-

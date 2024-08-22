@@ -45,7 +45,7 @@ class LoginController extends Controller
         //     return 'contact/contact-dashboard';
         // }
 
-        return '/admin/highlight';
+        return '/admin/dashboard';
     }
 
     // protected $redirectTo = RouteServiceProvider::HOME;
