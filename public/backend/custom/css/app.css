@@ -17,9 +17,6 @@ body {
     background-color: #fff;
     border-right: 1px solid #ced4da;
 }
-[class*=sidebar-light-] {
-    /* background-color: #fbfaff; */
-}
 
 /* [class*=sidebar-dark] .user-panel,
 [class*=sidebar-dark] .brand-link {
@@ -62,13 +59,6 @@ body {
     /* transform: translate(-3px, -3px); */
     background-color: #3d90d017 !important;
     /* outline: 1px solid #b78c67b3; */
-}
-[class*=sidebar-dark-] .nav-sidebar>.nav-item>.nav-link.active {
-    /* box-shadow: none !important; */
-}
-
-.nav-pills .nav-link {
-    /* border-radius: 26px; */
 }
 
 [class*=sidebar-light-] .nav-treeview>.nav-item>.nav-link.active, [class*=sidebar-light-] .nav-treeview>.nav-item>.nav-link.active:hover {

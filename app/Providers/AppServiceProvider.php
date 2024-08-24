@@ -42,9 +42,6 @@ class AppServiceProvider extends ServiceProvider
 
             }, []);
 
-            $home_stay_dropdowns = Room::where('status', 'active')->get();
-            $view->with('home_stay_dropdowns', $home_stay_dropdowns);
-
             $view->with('current_locale', app()->getLocale());
             $view->with('available_locales', $langs);
 

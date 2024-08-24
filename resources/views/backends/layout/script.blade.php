@@ -101,32 +101,11 @@
             autoclose: true,
             format: "dd-mm-yyyy"
         });
-
-
-        //   $(".table").DataTable({
-        //     "responsive": true, "lengthChange": false, "autoWidth": false,
-        //     "buttons": ["copy", "csv", "excel", "pdf", "print", "colvis"]
-        //   }).buttons().container().appendTo('#example1_wrapper .col-md-6:eq(0)');
-        //   $('#example2').DataTable({
-        //     "paging": true,
-        //     "lengthChange": false,
-        //     "searching": false,
-        //     "ordering": true,
-        //     "info": true,
-        //     "autoWidth": false,
-        //     "responsive": true,
-        //   });
     });
 </script>
 
 <script>
     $(document).ready(function() {
-        // alert(1);
-        // var success_audio = "{{ URL::asset('sound/success.wav') }}";
-        // var error_audio = "{{ URL::asset('sound/error.wav') }}";
-        // var success = new Audio(success_audio);
-        // var error = new Audio(error_audio);
-
         const Confirmation = Swal.mixin({
             customClass: {
                 confirmButton: 'btn btn-success',
@@ -154,76 +133,6 @@
         @endif
 
     });
-</script>
-
-<script>
-
-    setInterval(function() {
-        $.get({
-            url: `{{ route('admin.get_notification') }}`,
-            dataType: 'json',
-            success: function(response) {
-                console.log(response);
-                $('.comment_badge').text(response.comment_count);
-                if(response.comment_count > 0){
-                    $('.comment_badge').removeClass('d-none');
-                }
-                
-                $('.contact_badge').text(response.contact_us_count);
-                if(response.contact_us_count > 0){
-                    $('.contact_badge').removeClass('d-none');
-                }
-                $('.booking_badge').html(response.transaction_count);
-                if(response.transaction_count > 0){
-                    $('.booking_badge').removeClass('d-none');
-                }
-            },
-        });
-
-        $.ajax({
-            type: "get",
-            url: `{{ route('admin.get_booking_notification') }}`,
-            // data: "data",
-            dataType: "json",
-            success: function (response) {
-                console.log(response);
-                $.each(response, function (indexInArray, valueOfElement) {
-                    console.log(valueOfElement);
-                    toastr.info('You got new booking - Invoice No #' + valueOfElement);
-                });
-            }
-        });
-
-        $.ajax({
-            type: "get",
-            url: `{{ route('admin.get_comment_notification') }}`,
-            // data: "data",
-            dataType: "json",
-            success: function (response) {
-                console.log(response);
-                $.each(response, function (indexInArray, valueOfElement) {
-                    console.log(valueOfElement);
-                    toastr.info('Comment : ' + valueOfElement);
-                });
-            }
-        });
-
-        $.ajax({
-            type: "get",
-            url: `{{ route('admin.get_contact_us_notification') }}`,
-            // data: "data",
-            dataType: "json",
-            success: function (response) {
-                console.log(response);
-                $.each(response, function (indexInArray, valueOfElement) {
-                    console.log(valueOfElement);
-                    toastr.info('Contact Us : ' + valueOfElement);
-                });
-            }
-        });
-
-    }, 100000);
-
 </script>
 
 @stack('js')

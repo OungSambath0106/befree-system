@@ -71,7 +71,7 @@
                     </div>
                     <div class="inner text-right">
                         {{-- <h3>{{ App\helpers\AppHelper::dashboardQuery()['total_both'] }}</h3> --}}
-                        <h4>{{ $transactions->count() }}</h4>
+                        <h4></h4>
                         <p class="m-0 text-uppercase">{{ __('Total Booking') }}</p>
                     </div>
                 </div>
@@ -100,7 +100,7 @@
                         </div>
                     </div>
                     <div class="inner text-right">
-                        <h4>$ {{ $transactions->sum('final_total') }}</h4>
+                        <h4>$ </h4>
                         <p class="m-0 text-uppercase">{{ __('Total Earning') }}</p>
                     </div>
                 </div>
@@ -119,7 +119,7 @@
                         </div>
                     </div>
                     <div class="inner text-right">
-                        <h4>{{ $customers->count() }}</h4>
+                        <h4></h4>
                         <p class="m-0 text-uppercase">{{ __('Total Customer') }}</p>
                     </div>
                 </div>
