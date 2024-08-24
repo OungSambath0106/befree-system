@@ -61,19 +61,6 @@
                                                                     </span>
                                                                 @enderror
                                                             </div>
-                                                            <div class="form-group col-md-12">
-                                                                <label
-                                                                    for="description_{{ $lang['code'] }}">{{ __('Description') }}
-                                                                    ({{ strtoupper($lang['code']) }})</label>
-                                                                <textarea type="text" id="description_{{ $lang['code'] }}"
-                                                                    class="form-control @error('description') is-invalid @enderror" name="description[]"
-                                                                    placeholder="{{ __('Enter Description') }}" value=""></textarea>
-                                                                @error('description')
-                                                                    <span class="invalid-feedback" role="alert">
-                                                                        <strong>{{ $message }}</strong>
-                                                                    </span>
-                                                                @enderror
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 @endif
@@ -91,18 +78,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="form-group col-md-6 ">
-                                        <label class="required_lable" for="sort_order">{{ __('Sort_Order') }}</label>
-                                        <input type="number" name="sort_order" id="sort_order" min="1"
-                                            class="form-control @error('sort_order') is-invalid @enderror" step="any"
-                                            value="{{ old('sort_order') }}"></input>
-                                        @error('sort_order')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-
+                                    
                                     <div class="form-group col-md-6">
                                         <div class="form-group">
                                             <label for="exampleInputFile">{{ __('Image') }}</label>

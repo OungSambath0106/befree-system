@@ -21,6 +21,10 @@ class PromotionController extends Controller
      */
     public function index()
     {
+        if (!auth()->user()->can('promotion.view')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $promotions = Promotion::latest('id')->paginate(10);
         return view('backends.promotion.index', compact('promotions'));
     }
@@ -49,10 +53,8 @@ class PromotionController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required',
-            'short_description' => 'nullable',
-            'content' => 'nullable',
-            'start_date' => 'nullable',
-            'end_date' => 'nullable',
+            'start_date' => 'required',
+            'end_date' => 'required',
         ]);
 
         if (is_null($request->title[array_search('en', $request->lang)])) {
@@ -63,23 +65,7 @@ class PromotionController extends Controller
                 );
             });
         }
-        if (is_null($request->short_description[array_search('en', $request->lang)])) {
-            $validator->after(function ($validator) {
-                $validator->errors()->add(
-                    'short_description',
-                    'short_description field is required!'
-                );
-            });
-        }
-        if (is_null($request->content[array_search('en', $request->lang)])) {
-            $validator->after(function ($validator) {
-                $validator->errors()->add(
-                    'content',
-                    'content field is required!'
-                );
-            });
-        }
-
+        
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
@@ -92,31 +78,19 @@ class PromotionController extends Controller
 
             $promotion = new Promotion();
             $promotion->title = $request->title[array_search('en', $request->lang)];
-            $promotion->short_description = $request->short_description[array_search('en', $request->lang)];
-            $promotion->content = $request->content[array_search('en', $request->lang)];
             $promotion->start_date = $request->start_date;
             $promotion->end_date = $request->end_date;
 
 
-            if ($request->filled('header_banners')) {
-                $promotion->header_banner = $request->header_banners;
+            if ($request->filled('banners')) {
+                $promotion->banner = $request->banners;
                 $directory = public_path('uploads/promotions');
                 if (!File::exists($directory)) {
                     File::makeDirectory($directory, 0777, true);
                 }
 
-                $header_banner = File::move(public_path('/uploads/temp/' . $request->header_banners), public_path('uploads/promotions/' . $request->header_banners));
+                $banner = File::move(public_path('/uploads/temp/' . $request->banners), public_path('uploads/promotions/' . $request->banners));
             }
-            if ($request->filled('footer_banners')) {
-                $promotion->footer_banner = $request->footer_banners;
-                $directory = public_path('uploads/promotions');
-                if (!File::exists($directory)) {
-                    File::makeDirectory($directory, 0777, true);
-                }
-
-                $footer_banner = File::move(public_path('/uploads/temp/' . $request->footer_banners), public_path('uploads/promotions/' . $request->footer_banners));
-            }
-
 
             $promotion->save();
 
@@ -130,24 +104,6 @@ class PromotionController extends Controller
                         'locale' => $key,
                         'key' => 'title',
                         'value' => $request->title[$index],
-                    ));
-                }
-                if ($request->short_description[$index] && $key != 'en') {
-                    array_push($data, array(
-                        'translationable_type' => 'App\Models\Promotion',
-                        'translationable_id' => $promotion->id,
-                        'locale' => $key,
-                        'key' => 'short_description',
-                        'value' => $request->short_description[$index],
-                    ));
-                }
-                if ($request->content[$index] && $key != 'en') {
-                    array_push($data, array(
-                        'translationable_type' => 'App\Models\Promotion',
-                        'translationable_id' => $promotion->id,
-                        'locale' => $key,
-                        'key' => 'content',
-                        'value' => $request->content[$index],
                     ));
                 }
             }
@@ -208,10 +164,8 @@ class PromotionController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required',
-            'short_description' => 'nullable',
-            'content' => 'nullable',
-            'start_date' => 'nullable',
-            'end_date' => 'nullable',
+            'start_date' => 'required',
+            'end_date' => 'required',
         ]);
 
         if (is_null($request->title[array_search('en', $request->lang)])) {
@@ -219,22 +173,6 @@ class PromotionController extends Controller
                 $validator->errors()->add(
                     'title',
                     'title field is required!'
-                );
-            });
-        }
-        if (is_null($request->short_description[array_search('en', $request->lang)])) {
-            $validator->after(function ($validator) {
-                $validator->errors()->add(
-                    'short_description',
-                    'short_description field is required!'
-                );
-            });
-        }
-        if (is_null($request->content[array_search('en', $request->lang)])) {
-            $validator->after(function ($validator) {
-                $validator->errors()->add(
-                    'content',
-                    'content field is required!'
                 );
             });
         }
@@ -251,69 +189,12 @@ class PromotionController extends Controller
 
             $promotion =  Promotion::findOrFail($id);
             $promotion->title = $request->title[array_search('en', $request->lang)];
-            $promotion->short_description = $request->short_description[array_search('en', $request->lang)];
-            $promotion->content = $request->content[array_search('en', $request->lang)];
             $promotion->start_date = $request->start_date;
             $promotion->end_date = $request->end_date;
 
             // Update header banner
-            $this->updateImage($request, $promotion, 'header_banner');
+            $this->updateImage($request, $promotion, 'banner');
 
-            // Update footer banner
-            $this->updateImage($request, $promotion, 'footer_banner');
-            // // Check if a new image is uploaded
-            // if ($request->hasFile('header_banner')) {
-            //     // Delete the old image if it exists
-            //     if ($promotion->header_banner) {
-            //         $oldImagePath = public_path('uploads/promotions/' . $promotion->header_banner);
-
-            //         if (file_exists($oldImagePath)) {
-            //             unlink($oldImagePath); // Delete the old image file
-            //         }
-            //     }
-
-            //     // Upload and save the new image
-            //     $image = $request->file('header_banner');
-
-            //     // Generate a unique filename based on current date and unique identifier
-            //     $imageName = now()->format('Y-m-d') . '-' . uniqid() . '.' . $image->getClientOriginalExtension();
-
-            //     // Move the uploaded file to the promotions directory
-            //     $image->move(public_path('uploads/promotions'), $imageName);
-
-            //     // Update the header_banner attribute of the promotion model
-            //     $promotion->header_banner = $imageName;
-
-            //     // Save the updated promotion model
-            //     $promotion->save();
-            // }
-
-            // // Check if a new image is uploaded
-            // if ($request->hasFile('footer_banner')) {
-            //     // Delete the old image if it exists
-            //     if ($promotion->footer_banner) {
-            //         $oldImagePath = public_path('uploads/promotions/' . $promotion->footer_banner);
-
-            //         if (file_exists($oldImagePath)) {
-            //             unlink($oldImagePath); // Delete the old image file
-            //         }
-            //     }
-
-            //     // Upload and save the new image
-            //     $image = $request->file('footer_banner');
-
-            //     // Generate a unique filename based on current date and unique identifier
-            //     $imageName = now()->format('Y-m-d') . '-' . uniqid() . '.' . $image->getClientOriginalExtension();
-
-            //     // Move the uploaded file to the promotions directory
-            //     $image->move(public_path('uploads/promotions'), $imageName);
-
-            //     // Update the footer_banner attribute of the promotion model
-            //     $promotion->footer_banner = $imageName;
-
-            //     // Save the updated promotion model
-            //     $promotion->save();
-            // }
             $promotion->save();
 
             foreach ($request->lang as $index => $key) {
@@ -324,28 +205,6 @@ class PromotionController extends Controller
                             'locale' => $key,
                             'key' => 'title'],
                         ['value' => $request->title[$index]]
-                    );
-                }
-            }
-            foreach ($request->lang as $index => $key) {
-                if (isset($request->short_description[$index]) && $key != 'en') {
-                    Translation::updateOrInsert(
-                        ['translationable_type' => 'App\Models\Promotion',
-                            'translationable_id' => $promotion->id,
-                            'locale' => $key,
-                            'key' => 'short_description'],
-                        ['value' => $request->short_description[$index]]
-                    );
-                }
-            }
-            foreach ($request->lang as $index => $key) {
-                if (isset($request->content[$index]) && $key != 'en') {
-                    Translation::updateOrInsert(
-                        ['translationable_type' => 'App\Models\Promotion',
-                            'translationable_id' => $promotion->id,
-                            'locale' => $key,
-                            'key' => 'content'],
-                        ['value' => $request->content[$index]]
                     );
                 }
             }

@@ -51,12 +51,6 @@
                                                             if ($t->locale == $lang['code'] && $t->key == 'title') {
                                                                 $translate[$lang['code']]['title'] = $t->value;
                                                             }
-                                                            if ($t->locale == $lang['code'] && $t->key == 'short_description') {
-                                                                $translate[$lang['code']]['short_description'] = $t->value;
-                                                            }
-                                                            if ($t->locale == $lang['code'] && $t->key == 'content') {
-                                                                $translate[$lang['code']]['content'] = $t->value;
-                                                            }
                                                         }
                                                     }
                                                     ?>
@@ -80,32 +74,6 @@
                                                                     </span>
                                                                 @enderror
                                                             </div>
-                                                            <div class="form-group col-md-12">
-                                                                <label
-                                                                    for="short_description_{{ $lang['code'] }}">{{ __('Description') }}({{ strtoupper($lang['code']) }})</label>
-                                                                <textarea type="text" id="short_description_{{ $lang['code'] }}"
-                                                                    class="form-control @error('short_description') is-invalid @enderror" name="short_description[]"
-                                                                    placeholder="{{ __('Enter Description') }}" value="">{{ $translate[$lang['code']]['short_description'] ?? $promotion['short_description'] }}</textarea>
-
-                                                                @error('short_description')
-                                                                    <span class="invalid-feedback" role="alert">
-                                                                        <strong>{{ $message }}</strong>
-                                                                    </span>
-                                                                @enderror
-                                                            </div>
-                                                            <div class="form-group col-md-12">
-                                                                <label
-                                                                    for="content_{{ $lang['code'] }}">{{ __('Content') }}({{ strtoupper($lang['code']) }})</label>
-                                                                <textarea id="content_{{ $lang['code'] }}" class="form-control @error('content') is-invalid @enderror" name="content[]"
-                                                                    placeholder="{{ __('Enter Content') }}">{{ $translate[$lang['code']]['content'] ?? $promotion['content'] }}</textarea>
-
-                                                                @error('content')
-                                                                    <span class="invalid-feedback" role="alert">
-                                                                        <strong>{{ $message }}</strong>
-                                                                    </span>
-                                                                @enderror
-                                                            </div>
-
                                                         </div>
                                                     </div>
                                                 @endif
@@ -122,6 +90,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
+                                    
                                     <div class="form-group col-md-6">
                                         <label class="required_lable">{{ __('Start Date') }}</label>
                                         <input type="date" class="form-control @error('start_date') is-invalid @enderror"
@@ -132,6 +101,7 @@
                                             </span>
                                         @enderror
                                     </div>
+
                                     <div class="form-group col-md-6">
                                         <label class="required_lable">{{ __('End Date') }}</label>
                                         <input type="date" class="form-control @error('end_date') is-invalid @enderror"
@@ -142,42 +112,22 @@
                                             </span>
                                         @enderror
                                     </div>
-                                    {{-- <div class="form-group col-md-6">
-                                        <div class="form-group">
-                                            <label for="exampleInputFile">{{ __('Header_Banner') }}</label>
-                                            <div class="input-group">
-                                                <div class="custom-file">
-                                                    <input type="file" class="custom-file-input header-file-input"
-                                                        id="exampleInputFile" name="header_banners">
-                                                    <label class="custom-file-label"
-                                                        for="exampleInputFile">{{ $promotion->header_banner ?? __('Choose Image') }}</label>
-                                                </div>
-                                            </div>
-                                            <div class="preview text-center border rounded mt-2" style="height: 150px">
-                                                <img src="
-                                                @if ($promotion->header_banner && file_exists(public_path('uploads/promotions/' . $promotion->header_banner))) {{ asset('uploads/promotions/' . $promotion->header_banner) }}
-                                                @else
-                                                    {{ asset('uploads/image/default.png') }} @endif
-                                                "
-                                                    alt="" height="100%">
-                                            </div>
-                                        </div>
-                                    </div> --}}
+
                                     <div class="form-group col-md-6">
                                         <div class="form-group">
-                                            <label for="exampleInputFile">{{ __('Header_Banner') }}</label>
+                                            <label for="exampleInputFile">{{ __('Banner') }}</label>
                                             <div class="input-group">
                                                 <div class="custom-file">
                                                     <input type="file" class="custom-file-input header-file-input"
-                                                        id="exampleInputFile" name="header_banner"
+                                                        id="exampleInputFile" name="banner"
                                                         accept="image/png, image/jpeg">
                                                     <label class="custom-file-label"
-                                                        for="exampleInputFile">{{ $promotion->header_banner ?? __('Choose Image') }}</label>
+                                                        for="exampleInputFile">{{ $promotion->banner ?? __('Choose Image') }}</label>
                                                 </div>
                                             </div>
                                             <div class="preview text-center border rounded mt-2" style="height: 150px">
                                                 <img src="
-                                                @if ($promotion->header_banner && file_exists(public_path('uploads/promotions/' . $promotion->header_banner))) {{ asset('uploads/promotions/' . $promotion->header_banner) }}
+                                                @if ($promotion->banner && file_exists(public_path('uploads/promotions/' . $promotion->banner))) {{ asset('uploads/promotions/' . $promotion->banner) }}
                                                 @else
                                                     {{ asset('uploads/image/default.png') }} @endif
                                                 "
@@ -185,51 +135,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                    {{-- <div class="form-group col-md-6">
-                                        <div class="form-group">
-                                            <label for="exampleInputFile">{{ __('Header_Banner') }}</label>
-                                            <div class="input-group">
-                                                <div class="custom-file">
-                                                    <input type="hidden" name="header_banners"
-                                                        class="header_banner_hidden">
-                                                    <input type="file" class="custom-file-input header-file-input"
-                                                        id="exampleInputFile" name="header_banner"
-                                                        accept="image/png, image/jpeg">
-                                                    <label class="custom-file-label"
-                                                        for="exampleInputFile">{{ $promotion->header_banner ?? __('Choose Image') }}</label>
-                                                </div>
-                                            </div>
-                                            <div class="preview preview-multiple text-center border rounded mt-2"
-                                                style="height: 150px">
-                                                <img src=" @if ($promotion->header_banner && file_exists(public_path('uploads/promotions/' . $promotion->header_banner))) {{ asset('uploads/promotions/' . $promotion->header_banner) }}
-                                                @else
-                                                    {{ asset('uploads/image/default.png') }} @endif
-                                                "
-                                                    alt="" height="100%">
-                                            </div>
-                                        </div>
-                                    </div> --}}
-                                    <div class="form-group col-md-6">
-                                        <div class="form-group">
-                                            <label for="exampleInputFile">{{ __('Footer_Banner') }}</label>
-                                            <div class="input-group">
-                                                <div class="custom-file">
-                                                    <input type="file" class="custom-file-input footer-file-input"
-                                                        id="exampleInputFile" name="footer_banner">
-                                                    <label class="custom-file-label"
-                                                        for="exampleInputFile">{{ $promotion->footer_banner ?? __('Choose Image') }}</label>
-                                                </div>
-                                            </div>
-                                            <div class="preview text-center border rounded mt-2" style="height: 150px">
-                                                <img src="
-                                                @if ($promotion->footer_banner && file_exists(public_path('uploads/promotions/' . $promotion->footer_banner))) {{ asset('uploads/promotions/' . $promotion->footer_banner) }}
-                                                @else
-                                                    {{ asset('uploads/image/default.png') }} @endif
-                                                "
-                                                    alt="" height="100%">
-                                            </div>
-                                        </div>
-                                    </div>
+                                    
                                 </div>
                             </div>
                         </div>

@@ -4,9 +4,7 @@
             <tr>
                 <th>#</th>
                 <th>{{ __('Title') }}</th>
-                <th>{{ __('Description') }}</th>
                 <th>{{ __('Image') }}</th>
-                {{-- <th>{{ __('Sort_Order') }}</th> --}}
                 <th>{{ __('Status') }}</th>
                 <th>{{ __('Action') }}</th>
             </tr>
@@ -16,7 +14,6 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->title }}</td>
-                    <td>{{ $item->description }}</td>
                     <td>
                         <img width="30%" height="auto" src="
                         @if ($item->image && file_exists(public_path('uploads/onboards/' . $item->image))) {{ asset('uploads/onboards/' . $item->image) }}
@@ -24,12 +21,7 @@
                             {{ asset('uploads/image/default.png') }} @endif
                         "
                             alt="" class="profile_img_table">
-
-                        {{-- <span class="ml-2">
-                            {{ $item->title }}
-                        </span> --}}
                     </td>
-                    {{-- <td>{{ $item->sort_order }}</td> --}}
 
                     <td>
                         <div class="custom-control custom-switch">

@@ -21,6 +21,10 @@ class BanerController extends Controller
      */
     public function index()
     {
+        if (!auth()->user()->can('banner.view')) {
+            abort(403, 'Unauthorized action.');
+        }
+
         $baners = Baner::latest('id')->paginate(10);
         return view('backends.baner-slider.index', compact('baners'));
     }

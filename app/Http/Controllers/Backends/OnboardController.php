@@ -21,9 +21,12 @@ class OnboardController extends Controller
      */
     public function index()
     {
-        $onboards = onboard::orderBy('sort_order', 'asc')->paginate(10);
+        if (!auth()->user()->can('onboard.view')) {
+            abort(403, 'Unauthorized action.');
+        }
 
-        // $onboards = onboard::latest('id')->paginate(10);
+        $onboards = onboard::latest('id')->paginate(10);
+
         return view('backends.onboard.index', compact('onboards'));
     }
 
@@ -51,8 +54,6 @@ class OnboardController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required',
-            'description' => 'required',
-            'sort_order' => 'required|integer',
         ]);
 
         if (is_null($request->title[array_search('en', $request->lang)])) {
@@ -60,14 +61,6 @@ class OnboardController extends Controller
                 $validator->errors()->add(
                     'title',
                     'title field is required!'
-                );
-            });
-        }
-        if (is_null($request->description[array_search('en', $request->lang)])) {
-            $validator->after(function ($validator) {
-                $validator->errors()->add(
-                    'description',
-                    'description field is required!'
                 );
             });
         }
@@ -84,18 +77,6 @@ class OnboardController extends Controller
 
             $onboard = new Onboard();
             $onboard->title = $request->title[array_search('en', $request->lang)];
-            $onboard->description = $request->description[array_search('en', $request->lang)];
-            // $onboard->sort_order = $request->sort_order;
-            // Check if there are existing items with sort_order = 1
-            $existingItem = Onboard::where('sort_order', 1)->first();
-
-            if ($existingItem) {
-                // Increment sort_order of all existing items by 1
-                Onboard::where('sort_order', '>=', 1)->increment('sort_order');
-            }
-
-            // Set sort_order of the new item to 1
-            $onboard->sort_order = 1;
 
             if ($request->filled('images')) {
                 $onboard->image = $request->images;
@@ -120,15 +101,6 @@ class OnboardController extends Controller
                         'locale' => $key,
                         'key' => 'title',
                         'value' => $request->title[$index],
-                    ));
-                }
-                if ($request->description[$index] && $key != 'en') {
-                    array_push($data, array(
-                        'translationable_type' => 'App\Models\Onboard',
-                        'translationable_id' => $onboard->id,
-                        'locale' => $key,
-                        'key' => 'description',
-                        'value' => $request->description[$index],
                     ));
                 }
             }
@@ -190,8 +162,6 @@ class OnboardController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'title' => 'required',
-            'description' => 'required',
-            'sort_order' => 'required|integer',
         ]);
 
         if (is_null($request->title[array_search('en', $request->lang)])) {
@@ -199,14 +169,6 @@ class OnboardController extends Controller
                 $validator->errors()->add(
                     'title',
                     'title field is required!'
-                );
-            });
-        }
-        if (is_null($request->description[array_search('en', $request->lang)])) {
-            $validator->after(function ($validator) {
-                $validator->errors()->add(
-                    'description',
-                    'description field is required!'
                 );
             });
         }
@@ -223,21 +185,6 @@ class OnboardController extends Controller
 
             $onboard =  Onboard::findOrFail($id);
             $onboard->title = $request->title[array_search('en', $request->lang)];
-            $onboard->description = $request->description[array_search('en', $request->lang)];
-            // $onboard->sort_order = $request->sort_order;
-
-            $newSortOrder = $request->input('sort_order');
-            // If the new sort order is different from the current one
-            if ($onboard->sort_order != $newSortOrder) {
-                // Increment sort order of items greater than or equal to the new sort order
-                Onboard::where('sort_order', '>=', $newSortOrder)
-                    ->where('id', '!=', $id) // Exclude the current item
-                    ->increment('sort_order');
-
-                // Update the sort order of the current item
-                $onboard->sort_order = $newSortOrder;
-            }
-            $onboard->save();
 
             if ($request->hasFile('image')) {
                 // Delete the old image if it exists
@@ -275,17 +222,6 @@ class OnboardController extends Controller
                             'locale' => $key,
                             'key' => 'title'],
                         ['value' => $request->title[$index]]
-                    );
-                }
-            }
-            foreach ($request->lang as $index => $key) {
-                if (isset($request->description[$index]) && $key != 'en') {
-                    Translation::updateOrInsert(
-                        ['translationable_type' => 'App\Models\Onboard',
-                            'translationable_id' => $onboard->id,
-                            'locale' => $key,
-                            'key' => 'description'],
-                        ['value' => $request->description[$index]]
                     );
                 }
             }

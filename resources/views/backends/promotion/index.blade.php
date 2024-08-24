@@ -35,6 +35,51 @@
                         <div class="card-header">
                             <div class="row align-items-center">
                                 <div class="col-sm-6">
+                                    <h3 class="card-title"> <i class="fa fa-filter" aria-hidden="true"></i>
+                                        {{ __('Filter') }}</h3>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="col-12">
+                                <div class="tab-content" id="custom-content-below-tabContent">
+                                    <form method="GET" action="{{ route('admin.user.index') }}">
+                                        <div class="row">
+                                            <div class=" col-9 d-flex">
+                                                <div class="col-sm-6 filter">
+                                                    <label for="start_date">Start Date</label>
+                                                    <input type="date" id="start_date" class="form-control"
+                                                        name="start_date" value="{{ request('start_date') }}">
+                                                </div>
+                                                <div class="col-sm-6 filter">
+                                                    <label for="end_date">End Date</label>
+                                                    <input type="date" id="end_date" class="form-control"
+                                                        name="end_date" value="{{ request('end_date') }}">
+                                                </div>
+                                            </div>
+                                            <div class=" col-3 mt-3">
+                                                <div class="col-sm-12 mt-3">
+                                                    <button type="submit" class="btn btn-primary">
+                                                        <i class="fa fa-filter" aria-hidden="true"></i>
+                                                        {{ __('Filter') }}
+                                                    </button>
+                                                    <a href="{{ route('admin.user.index') }}"
+                                                        class=" btn btn-danger">
+                                                        <i class="fa fa-refresh" aria-hidden="true"></i>
+                                                        {{ __('Reset') }}
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <div class="row align-items-center">
+                                <div class="col-sm-6">
                                     <h3 class="card-title">{{ __('Promotion List') }}</h3>
                                 </div>
                                 {{-- <span class="badge bg-warning total-count">{{ $grades->total() }}</span> --}}

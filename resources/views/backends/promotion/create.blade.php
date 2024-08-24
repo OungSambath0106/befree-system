@@ -61,34 +61,6 @@
                                                                     </span>
                                                                 @enderror
                                                             </div>
-                                                            <div class="form-group col-md-12">
-                                                                <label
-                                                                    for="short_description_{{ $lang['code'] }}">{{ __('Description') }}
-                                                                    ({{ strtoupper($lang['code']) }})</label>
-                                                                <textarea type="text"
-                                                                    id="short_description_{{ $lang['code'] }}"
-                                                                    class="form-control @error('short_description') is-invalid @enderror"
-                                                                    name="short_description[]"
-                                                                    placeholder="{{ __('Enter short_description') }}"
-                                                                    value=""></textarea>
-                                                                @error('short_description')
-                                                                    <span class="invalid-feedback" role="alert">
-                                                                        <strong>{{ $message }}</strong>
-                                                                    </span>
-                                                                @enderror
-                                                            </div>
-                                                            <div class="form-group col-md-12">
-                                                                <label
-                                                                    for="content_{{ $lang['code'] }}">{{ __('Content') }}
-                                                                    ({{ strtoupper($lang['code']) }})</label>
-                                                                <textarea type="text" id="content_{{ $lang['code'] }}" class="form-control @error('content') is-invalid @enderror"
-                                                                    name="content[]" placeholder="{{ __('Enter Content') }}" value=""></textarea>
-                                                                @error('content')
-                                                                    <span class="invalid-feedback" role="alert">
-                                                                        <strong>{{ $message }}</strong>
-                                                                    </span>
-                                                                @enderror
-                                                            </div>
                                                         </div>
                                                     </div>
                                                 @endif
@@ -106,6 +78,7 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
+
                                     <div class="form-group col-md-6">
                                         <label class="required_lable">{{__('Start Date')}}</label>
                                         <input type="date" class="form-control @error('start_date') is-invalid @enderror" value="{{ old('start_date') }}"
@@ -116,6 +89,7 @@
                                             </span>
                                         @enderror
                                     </div>
+
                                     <div class="form-group col-md-6">
                                         <label class="required_lable">{{__('End Date')}}</label>
                                         <input type="date" class="form-control @error('end_date') is-invalid @enderror" value="{{ old('end_date') }}"
@@ -126,39 +100,19 @@
                                             </span>
                                         @enderror
                                     </div>
+
                                     <div class="form-group col-md-6">
                                         <div class="form-group">
-                                            <label for="exampleInputFile">{{ __('Header_Banner') }}</label>
+                                            <label for="exampleInputFile">{{ __('Banner') }}</label>
                                             <div class="input-group">
                                                 <div class="custom-file">
-                                                    <input type="hidden" name="header_banners"
-                                                        class="header_banner_hidden">
+                                                    <input type="hidden" name="banners"
+                                                        class="banner_hidden">
                                                     <input type="file" class="custom-file-input header-file-input"
-                                                        id="exampleInputFile" name="header_banner"
+                                                        id="exampleInputFile" name="banner"
                                                         accept="image/png, image/jpeg">
                                                     <label class="custom-file-label"
-                                                        for="exampleInputFile">{{ __('Choose Header_Banner') }}</label>
-                                                </div>
-                                            </div>
-                                            <div class="preview preview-multiple text-center border rounded mt-2"
-                                                style="height: 150px">
-                                                <img src="{{ asset('uploads/image/default.png') }}" alt=""
-                                                    height="100%">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <div class="form-group">
-                                            <label for="exampleInputFile">{{ __('Footer_Banner') }}</label>
-                                            <div class="input-group">
-                                                <div class="custom-file">
-                                                    <input type="hidden" name="footer_banners"
-                                                        class="footer_banner_hidden">
-                                                    <input type="file" class="custom-file-input footer-file-input"
-                                                        id="exampleInputFile" name="footer_banner"
-                                                        accept="image/png, image/jpeg">
-                                                    <label class="custom-file-label"
-                                                        for="exampleInputFile">{{ __('Choose Footer_Banner') }}</label>
+                                                        for="exampleInputFile">{{ __('Choose Banner') }}</label>
                                                 </div>
                                             </div>
                                             <div class="preview preview-multiple text-center border rounded mt-2"

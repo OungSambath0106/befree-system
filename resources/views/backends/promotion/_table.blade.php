@@ -4,10 +4,7 @@
             <tr>
                 <th>#</th>
                 <th>{{ __('Title') }}</th>
-                <th>{{ __('Description') }}</th>
-                {{-- <th>{{ __('Content') }}</th> --}}
-                {{-- <th>{{ __('Header_Banner') }}</th>
-                <th>{{ __('Footer_Banner') }}</th> --}}
+                <th>{{ __('Banner') }}</th>
                 <th>{{ __('Start Date') }}</th>
                 <th>{{ __('End Date') }}</th>
                 <th>{{ __('Status') }}</th>
@@ -19,26 +16,16 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->title }}</td>
-                    <td>{{ $item->short_description }}</td>
-                    <td>{{ $item->start_date }}</td>
-                    <td>{{ $item->end_date }}</td>
-                    {{-- <td class="col-md-5">{{ $item->content }}</td> --}}
-                    {{-- <td>
+                    <td>
                         <img width="30%" height="auto" src="
-                        @if ($item->header_banner && file_exists(public_path('uploads/promotions/' . $item->header_banner))) {{ asset('uploads/promotions/' . $item->header_banner) }}
+                        @if ($item->banner && file_exists(public_path('uploads/promotions/' . $item->banner))) {{ asset('uploads/promotions/' . $item->banner) }}
                         @else
                             {{ asset('uploads/image/default.png') }} @endif
                         "
                             alt="" class="profile_img_table">
                     </td>
-                    <td>
-                        <img width="30%" height="auto" src="
-                        @if ($item->footer_banner && file_exists(public_path('uploads/promotions/' . $item->footer_banner))) {{ asset('uploads/promotions/' . $item->footer_banner) }}
-                        @else
-                            {{ asset('uploads/image/default.png') }} @endif
-                        "
-                            alt="" class="profile_img_table">
-                    </td> --}}
+                    <td>{{ $item->start_date }}</td>
+                    <td>{{ $item->end_date }}</td>
                     <td>
                         <div class="custom-control custom-switch">
                             <input type="checkbox" class="custom-control-input switcher_input status"

@@ -15,12 +15,18 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         if (!auth()->user()->can('user.view')) {
             abort(403, 'Unauthorized action.');
         }
-        $users = User::latest('id')->paginate(10);
+        $users = User::when($request->start_date && $request->end_date, function ($query) use ($request) {
+            $query->whereDate('created_at', '>=', $request->start_date)
+                ->whereDate('created_at', '<=', $request->end_date);
+        })
+            ->latest('id')
+            ->paginate(10);
+            
         return view('backends.user.index', compact('users'));
     }
     public function create()
