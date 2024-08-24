@@ -81,7 +81,7 @@
                             class="nav-link @if (request()->routeIs('admin.gallery*')) active @endif">
                             @include('svgs.gallery')
                             <p>
-                                {{ __('Gallery') }}
+                                {{ __('Banner') }}
                             </p>
                         </a>
                     </li>

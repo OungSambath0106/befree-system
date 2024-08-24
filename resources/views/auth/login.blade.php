@@ -22,6 +22,10 @@
                 width: 100px;
             }
         }
+        input.form-control:focus {
+            border-color: #3d95d0;
+            outline: none;
+        }
     </style>
 </head>
 
@@ -52,7 +56,7 @@
                                 <div class="login-wrap">
                                     <div class="d-flex justify-content-center">
                                         <div class="">
-                                            <h3 class="text-uppercase" style="margin: 0;color:#d0803d;">{{ __('Login') }}</h3>
+                                            <h3 class="text-uppercase" style="margin: 0;color:#3d95d0;">{{ __('Login') }}</h3>
                                         </div>
                                     </div>
                                     <br>
@@ -92,7 +96,7 @@
 
                                         <div class="form-group">
                                             <button type="submit" class="btn btn-block text-white rounded float-right"
-                                                style="margin-bottom: 20px; background-color: #d0803d;">{{ __('Log In') }}</button>
+                                                style="margin-bottom: 20px; background-color: #3d95d0;">{{ __('Log In') }}</button>
                                         </div>
                                         <br>
 

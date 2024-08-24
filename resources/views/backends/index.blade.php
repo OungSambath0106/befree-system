@@ -10,7 +10,7 @@
 
         .dashboard_event_table tr th {
             background: #d4e0ff !important;
-            color: #d0803d !important;
+            color: #3d95d0 !important;
             text-transform: uppercase;
         }
 
@@ -31,7 +31,7 @@
                     <div class="rounded-circle bg-light p-2" style="height: 70px; width: 70px;">
                         <div style="padding:13px;">
                             <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1"
-                                x="0px" y="0px" viewBox="0 0 64 80" style="enable-background:new 0 0 64 64; fill:#d0803d;"
+                                x="0px" y="0px" viewBox="0 0 64 80" style="enable-background:new 0 0 64 64; fill:#3d95d0;"
                                 xml:space="preserve">
                                 <path
                                     d="M58,15v-1v-2h5.281l-1.5-6H40.414H38h-3.38l-2.595-5.236L29.385,6H26h-2.414H2.219l-1.5,6H6v2v1v42H1v6h62v-6h-5V15z M47,33  h-2v-3.816c1.161,0.414,2,1.514,2,2.816V33z M43,33h-2v-4h2V33z M39,33h-2v-4h2V33z M35,33h-2v-4h2V33z M31,33h-2v-4h2V33z M27,33  h-2v-4h2V33z M23,33h-2v-4h2V33z M19,33h-2v-1c0-1.302,0.839-2.402,2-2.816V33z M47,35v10H17V35H47z M17,47h30v2H17V47z M49,46v-1  V35v-2v-1c0-2.757-2.243-5-5-5H20c-2.757,0-5,2.243-5,5v1v2v10v1v3H8V23.46C9.063,24.414,10.462,25,12,25  c2.086,0,3.924-1.071,5-2.69c1.076,1.62,2.914,2.69,5,2.69s3.924-1.071,5-2.69c1.076,1.62,2.914,2.69,5,2.69s3.924-1.071,5-2.69  c1.076,1.62,2.914,2.69,5,2.69s3.924-1.071,5-2.69c1.076,1.62,2.914,2.69,5,2.69c1.538,0,2.937-0.586,4-1.54V49h-7V46z M37.031,14  l-0.5-2H56v2H37.031z M60.219,8l0.5,2H58h-1H36.414l2-2H60.219z M30.615,8l1.395-2.764L33.38,8h2.206l-1.693,1.693l0.61,2.44  L32,10.882l-2.503,1.251l0.61-2.44L28.414,8H30.615z M33.764,14h-3.527L32,13.118L33.764,14z M3.281,10l0.5-2h21.805l2,2H7H6H3.281z   M8,12h19.469l-0.5,2H8V12z M8,16h48v3c0,2.206-1.794,4-4,4s-4-1.794-4-4v-1h-2v1c0,2.206-1.794,4-4,4s-4-1.794-4-4v-1h-2v1  c0,2.206-1.794,4-4,4s-4-1.794-4-4v-1h-2v1c0,2.206-1.794,4-4,4s-4-1.794-4-4v-1h-2v1c0,2.206-1.794,4-4,4s-4-1.794-4-4V16z M8,51h7  h34h7v6H8V51z M61,61H3v-2h58V61z" />
@@ -57,7 +57,7 @@
                                 <defs>
                                     <style type="text/css">
                                         .fil0 {
-                                            fill: #d0803d;
+                                            fill: #3d95d0;
                                             fill-rule: nonzero
                                         }
                                     </style>
@@ -82,7 +82,7 @@
                     <div class="rounded-circle bg-light p-2" style="height: 70px; width: 70px;">
                         <div style="padding:10px;">
                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 80" x="0px" y="0px"
-                                style="fill:#d0803d;">
+                                style="fill:#3d95d0;">
                                 <g data-name="Order-Shopping Cart-Wishlist-Paper-Commerce">
                                     <path
                                         d="M49,2H16a6,6,0,0,0-1,11.91V29h2V14H49a1,1,0,0,0,0-2,4,4,0,1,1,4-4V56a4,4,0,1,1-4-4,1,1,0,0,0,0-2H17V43H15v7.09A6,6,0,0,0,16,62H49a6,6,0,0,0,6-6V8A6,6,0,0,0,49,2ZM44.53,12H16a4,4,0,0,1,0-8H44.54a5.979,5.979,0,0,0-.01,8ZM16,60a4,4,0,0,1,0-8H44.53a5.979,5.979,0,0,0,.01,8Z" />
@@ -111,10 +111,10 @@
                     <div class="rounded-circle bg-light p-1" style="height: 70px; width: 70px;">
                         <div style="padding: 10px">
                             <svg viewBox="0 0 24 24" x="0px" y="0px" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="12" cy="6" r="4" stroke="#d0803d" stroke-width="1" />
+                                <circle cx="12" cy="6" r="4" stroke="#3d95d0" stroke-width="1" />
                                 <path
                                     d="M19.9975 18C20 17.8358 20 17.669 20 17.5C20 15.0147 16.4183 13 12 13C7.58172 13 4 15.0147 4 17.5C4 19.9853 4 22 12 22C14.231 22 15.8398 21.8433 17 21.5634"
-                                    stroke="#d0803d" stroke-width="1" stroke-linecap="round" />
+                                    stroke="#3d95d0" stroke-width="1" stroke-linecap="round" />
                             </svg>
                         </div>
                     </div>
