@@ -3,6 +3,7 @@
         <thead>
             <tr>
                 <th>#</th>
+                <th>{{ __('Discount Percent') }}</th>
                 <th>{{ __('Title') }}</th>
                 <th>{{ __('Banner') }}</th>
                 <th>{{ __('Start Date') }}</th>
@@ -16,13 +17,14 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $item->title }}</td>
+                    <td>{{ $item->title }}</td>
                     <td>
-                        <img width="30%" height="auto" src="
+                        <img width="90%" height="auto" src="
                         @if ($item->banner && file_exists(public_path('uploads/promotions/' . $item->banner))) {{ asset('uploads/promotions/' . $item->banner) }}
                         @else
-                            {{ asset('uploads/image/default.png') }} @endif
+                        {{ asset('uploads/defualt.png') }} @endif
                         "
-                            alt="" class="profile_img_table">
+                        alt="" class="profile_img_table" style="object-fit: cover">
                     </td>
                     <td>{{ $item->start_date }}</td>
                     <td>{{ $item->end_date }}</td>

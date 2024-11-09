@@ -11,7 +11,7 @@
                 <th>{{ __('Email') }}</th>
                 {{-- <th>Created by</th> --}}
                 <th>{{ __('Created date') }}</th>
-                @if (auth()->user()->can('user.edit'))    
+                @if (auth()->user()->can('user.edit'))
                 <th>{{ __('Action') }}</th>
                 @endif
             </tr>
@@ -27,7 +27,7 @@
                         @else
                             {{ asset('uploads/default-profile.png') }}
                         @endif
-                        " alt="" class="profile_img_table">
+                        " alt="" class="profile_img_table rounded-circle" style="object-fit: cover">
                     </td>
                     <td>{{ $user->first_name }}</td>
                     <td>{{ $user->last_name }}</td>

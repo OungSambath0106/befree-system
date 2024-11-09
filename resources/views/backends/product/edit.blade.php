@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>{{ __('Edit Promotion') }}</h1>
+                    <h1>{{ __('Edit Product') }}</h1>
                 </div>
             </div>
         </div>
@@ -16,7 +16,7 @@
             <div class="row">
                 <!-- left column -->
                 <div class="col-md-12">
-                    <form method="POST" action="{{ route('admin.promotion.update', $promotion->id) }}"
+                    <form method="POST" action="{{ route('admin.product.update', $product->id) }}"
                         enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
@@ -45,17 +45,14 @@
                                             @foreach (json_decode($language, true) as $lang)
                                                 @if ($lang['status'] == 1)
                                                     <?php
-                                                    if (count($promotion['translations'])) {
+                                                    if (count($product['translations'])) {
                                                         $translate = [];
-                                                        foreach ($promotion['translations'] as $t) {
-                                                            if ($t->locale == $lang['code'] && $t->key == 'title') {
-                                                                $translate[$lang['code']]['title'] = $t->value;
+                                                        foreach ($product['translations'] as $t) {
+                                                            if ($t->locale == $lang['code'] && $t->key == 'name') {
+                                                                $translate[$lang['code']]['name'] = $t->value;
                                                             }
-                                                            if ($t->locale == $lang['code'] && $t->key == 'short_description') {
-                                                                $translate[$lang['code']]['short_description'] = $t->value;
-                                                            }
-                                                            if ($t->locale == $lang['code'] && $t->key == 'content') {
-                                                                $translate[$lang['code']]['content'] = $t->value;
+                                                            if ($t->locale == $lang['code'] && $t->key == 'description') {
+                                                                $translate[$lang['code']]['description'] = $t->value;
                                                             }
                                                         }
                                                     }
@@ -68,13 +65,13 @@
                                                                 <input type="hidden" name="lang[]"
                                                                     value="{{ $lang['code'] }}">
                                                                 <label
-                                                                    for="title_{{ $lang['code'] }}">{{ __('Title') }}({{ strtoupper($lang['code']) }})</label>
-                                                                <input type="text" id="title_{{ $lang['code'] }}"
-                                                                    class="form-control @error('title') is-invalid @enderror"
-                                                                    name="title[]" placeholder="{{ __('Enter title') }}"
-                                                                    value="{{ $translate[$lang['code']]['title'] ?? $promotion['title'] }}">
+                                                                    for="name_{{ $lang['code'] }}">{{ __('Name') }}({{ strtoupper($lang['code']) }})</label>
+                                                                <input type="name" id="name_{{ $lang['code'] }}"
+                                                                    class="form-control @error('name') is-invalid @enderror"
+                                                                    name="name[]" placeholder="{{ __('Enter Name') }}"
+                                                                    value="{{ $translate[$lang['code']]['name'] ?? $product['name'] }}">
 
-                                                                @error('title')
+                                                                @error('name')
                                                                     <span class="invalid-feedback" role="alert">
                                                                         <strong>{{ $message }}</strong>
                                                                     </span>
@@ -82,18 +79,17 @@
                                                             </div>
                                                             <div class="form-group col-md-12">
                                                                 <label
-                                                                    for="short_description_{{ $lang['code'] }}">{{ __('Description') }}({{ strtoupper($lang['code']) }})</label>
-                                                                <textarea type="text" id="short_description_{{ $lang['code'] }}"
-                                                                    class="form-control @error('short_description') is-invalid @enderror" name="short_description[]"
-                                                                    placeholder="{{ __('Enter Description') }}" value="">{{ $translate[$lang['code']]['short_description'] ?? $promotion['short_description'] }}</textarea>
+                                                                    for="description_{{ $lang['code'] }}">{{ __('Description') }}({{ strtoupper($lang['code']) }})</label>
+                                                                <textarea type="text" id="description_{{ $lang['code'] }}"
+                                                                    class="form-control @error('description') is-invalid @enderror" name="description[]"
+                                                                    placeholder="{{ __('Enter Description') }}" value="">{{ $translate[$lang['code']]['description'] ?? $product['description'] }}</textarea>
 
-                                                                @error('short_description')
+                                                                @error('description')
                                                                     <span class="invalid-feedback" role="alert">
                                                                         <strong>{{ $message }}</strong>
                                                                     </span>
                                                                 @enderror
                                                             </div>
-
                                                         </div>
                                                     </div>
                                                 @endif
@@ -110,21 +106,62 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="form-group col-md-6">
-                                        <label class="required_lable">{{ __('Start Date') }}</label>
-                                        <input type="date" class="form-control @error('start_date') is-invalid @enderror"
-                                            value="{{ old('start_date', $promotion->start_date) }}" name="start_date">
-                                        @error('start_date')
+
+                                    <div class="form-group col-md-6 ">
+                                        <label class="required_lable" for="brand">{{ __('Brand') }}</label>
+                                        <select name="brand_id" id="brand"
+                                            class="form-control select2 @error('brand_id') is-invalid @enderror">
+                                            <option value="">{{ __('Select Brand') }}</option>
+                                            @foreach ($brands as $item)
+                                                <option value="{{ $item->id }}"
+                                                    {{ $item->id == old('brand_id', $product->brand_id) ? 'selected' : '' }}>
+                                                    {{ $item->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('brand')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
                                         @enderror
                                     </div>
+                                    <div class="form-group col-md-6 ">
+                                        <label class="required_lable" for="qty">{{ __('Quantity') }}</label>
+                                        <input type="number" name="qty" id="qty" min="0"  class="form-control @error('qty') is-invalid @enderror"
+                                        step="any" value="{{ old('qty', $product->qty) }}" oninput="this.value = this.value.replace(/^0+(?!$)/, '').replace(/\..*/, '')"></input>
+                                        @error('qty')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
                                     <div class="form-group col-md-6">
-                                        <label class="required_lable">{{ __('End Date') }}</label>
-                                        <input type="date" class="form-control @error('end_date') is-invalid @enderror"
-                                            value="{{ old('end_date', $promotion->end_date) }}" name="end_date">
-                                        @error('end_date')
+                                        <label class="required_label" for="size">{{ __('Size') }}</label>
+                                        <select name="size[]" id="size" multiple class="form-control select2 @error('size') is-invalid @enderror">
+                                            @for ($size = 35; $size <= 45; $size += 0.5)
+                                                <option value="{{ $size }}"
+                                                    @if (is_array(old('size', $product->size)) && in_array($size, old('size', $product->size))) selected @endif>
+                                                    {{ __('Size ') . $size }}
+                                                </option>
+                                            @endfor
+                                        </select>
+                                        @error('size')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-6 ">
+                                        <label class="required_lable" for="price">{{ __('Price') }}</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                            </div>
+                                            <input type="number" name="price" id="price" min="0" oninput="validatePriceInput(this)" onkeydown="preventMinus(event)"
+                                                class="form-control @error('price') is-invalid @enderror" step="any"
+                                                value="{{ old('price', $product->price) }}">
+                                        </div>
+                                        @error('price')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -132,22 +169,19 @@
                                     </div>
                                     <div class="form-group col-md-6">
                                         <div class="form-group">
-                                            <label for="exampleInputFile">{{ __('Header_Banner') }}</label>
+                                            <label for="image">{{ __('Image') }}</label>
                                             <div class="input-group">
                                                 <div class="custom-file">
-                                                    <input type="file" class="custom-file-input header-file-input"
-                                                        id="exampleInputFile" name="header_banner"
-                                                        accept="image/png, image/jpeg">
+                                                    <input type="hidden" name="images"
+                                                        value="{{ $product->image }}">
+                                                    <input type="file" class="custom-file-input image-file-input"
+                                                        id="image" name="image" accept="image/png, image/jpeg">
                                                     <label class="custom-file-label"
-                                                        for="exampleInputFile">{{ $promotion->header_banner ?? __('Choose Image') }}</label>
+                                                        for="image">{{ $product->image ?? __('Choose Image') }}</label>
                                                 </div>
                                             </div>
                                             <div class="preview text-center border rounded mt-2" style="height: 150px">
-                                                <img src="
-                                                @if ($promotion->header_banner && file_exists(public_path('uploads/promotions/' . $promotion->header_banner))) {{ asset('uploads/promotions/' . $promotion->header_banner) }}
-                                                @else
-                                                    {{ asset('uploads/image/default.png') }} @endif
-                                                "
+                                                <img src="{{ $product->image && file_exists(public_path('uploads/products/' . $product->image)) ? asset('uploads/products/' . $product->image) : asset('uploads/default.png') }}"
                                                     alt="" height="100%">
                                             </div>
                                         </div>
@@ -190,5 +224,20 @@
                 $('.no_translate_wrapper').removeClass('d-none');
             }
         });
+    </script>
+    <script>
+        // Function to prevent negative values
+        function validatePriceInput(input) {
+            if (input.value < 0) {
+                input.value = '';
+            }
+        }
+
+        // Function to prevent typing the minus (-) key
+        function preventMinus(event) {
+            if (event.key === '-' || event.key === '+') {
+                event.preventDefault();
+            }
+        }
     </script>
 @endpush

@@ -77,7 +77,7 @@
         //Initialize Select2 Elements
         $('.select2').select2({
             placeholder: `{{ __('Please Select') }}`,
-            allowClear: true
+            allowClear: false
         });
 
         // init custom file input

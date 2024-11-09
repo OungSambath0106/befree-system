@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Backends\BanerController;
+use App\Http\Controllers\Backends\BrandController;
 use App\Http\Controllers\Backends\RoleController;
 use App\Http\Controllers\Backends\UserController;
 use App\Http\Controllers\Backends\LanguageController;
@@ -12,6 +13,7 @@ use App\Http\Controllers\Backends\DashboardController;
 use App\Http\Controllers\Backends\FileManagerController;
 use App\Http\Controllers\Backends\BusinessSettingController;
 use App\Http\Controllers\Backends\OnboardController;
+use App\Http\Controllers\Backends\ProductController;
 use App\Http\Controllers\Backends\PromotionController;
 
 /*
@@ -43,8 +45,8 @@ Auth::routes();
 // save temp file
 Route::post('save_temp_file', [FileManagerController::class, 'saveTempFile'])->name('save_temp_file');
 
-// Route::redirect('/admin', '/admin/dashboard');
-Route::redirect('/admin', '/admin/highlight');
+Route::redirect('/admin', '/admin/dashboard');
+// Route::redirect('/admin', '/admin/highlight');
 
 Route::post('save_temp_file', [FileManagerController::class, 'saveTempFile'])->name('save_temp_file');
 Route::get('remove_temp_file', [FileManagerController::class, 'removeTempFile'])->name('remove_temp_file');
@@ -95,10 +97,18 @@ Route::middleware(['auth','CheckUserLogin', 'SetSessionData'])->group(function (
         //Route for onboard
         Route::resource('onboard', OnboardController::class);
         Route::post('onboard/update_status', [OnboardController::class, 'updateStatus'])->name('onboard.update_status');
-        
-        // Form Baner-Slider
+
+        // Route Baner-Slider
         Route::get('baner-slider/update_status', [BanerController::class, 'updateStatus'])->name('baner-slider.update_status');
         Route::resource('baner-slider', BanerController::class);
+
+        // Route Brand
+        Route::get('brand/update_status', [BrandController::class, 'updateStatus'])->name('brand.update_status');
+        Route::resource('brand', BrandController::class);
+
+        // Route Product
+        Route::get('product/update_status', [ProductController::class, 'updateStatus'])->name('product.update_status');
+        Route::resource('product', ProductController::class);
     });
 
 });

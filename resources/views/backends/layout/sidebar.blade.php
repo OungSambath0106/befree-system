@@ -1,5 +1,3 @@
-<style>
-</style>
 <aside class="main-sidebar elevation-4 sidebar-light-info" style="">
     <!-- Brand Logo -->
     @php
@@ -26,7 +24,7 @@
                 data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-               
+
                 <li class="nav-item">
                     <a href="{{ route('admin.dashboard') }}"
                         class="nav-link @if (request()->routeIs('admin.dashboard')) active @endif">
@@ -75,11 +73,48 @@
                     </li>
                 @endif
 
+                @if (auth()->user()->can('brand.view') || auth()->user()->can('product.view'))
+                    <li class="nav-item @if (request()->routeIs('admin.brand*', 'admin.product*')) menu-is-opening menu-open @endif">
+                        <a href="#" class="nav-link @if (request()->routeIs('admin.brand*', 'admin.product*')) active @endif">
+                            {{-- @include('svgs.blog') --}}
+                            <i class="nav-icon fa-solid fa-boxes"></i>
+                            <p>
+                                {{ __('Product Management') }}
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @if (auth()->user()->can('brand.view'))
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.brand.index') }}"
+                                        class="nav-link @if (request()->routeIs('admin.brand*')) active @endif">
+                                        <i class="fa-solid fa-circle nav-icon"></i>
+                                        <p>
+                                            {{ __('Brand') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endif
+                            @if (auth()->user()->can('product.view'))
+                                <li class="nav-item">
+                                    <a href="{{ route('admin.product.index') }}"
+                                        class="nav-link @if (request()->routeIs('admin.product*')) active @endif">
+                                        <i class="fa-solid fa-circle nav-icon"></i>
+                                        <p>
+                                            {{ __('Product') }}
+                                        </p>
+                                    </a>
+                                </li>
+                            @endif
+                        </ul>
+                    </li>
+                @endif
+
                 @if (auth()->user()->can('banner.view'))
                     <li class="nav-item">
                         <a href="{{ route('admin.baner-slider.index') }}"
                             class="nav-link @if (request()->routeIs('admin.baner-slider*')) active @endif">
-                            @include('svgs.gallery')
+                            @include('svgs.slider')
                             <p>
                                 {{ __('Baner Slider') }}
                             </p>
@@ -91,19 +126,19 @@
                     <li class="nav-item">
                         <a href="{{ route('admin.onboard.index') }}"
                             class="nav-link @if (request()->routeIs('admin.onboard*')) active @endif">
-                            @include('svgs.gallery')
+                            @include('svgs.blog')
                             <p>
                                 {{ __('OnBoard') }}
                             </p>
                         </a>
                     </li>
                 @endif
-                
+
                 @if (auth()->user()->can('promotion.view'))
                     <li class="nav-item">
                         <a href="{{ route('admin.promotion.index') }}"
                             class="nav-link @if (request()->routeIs('admin.promotion*')) active @endif">
-                            @include('svgs.gallery')
+                            @include('svgs.promotion1')
                             <p>
                                 {{ __('Promotion') }}
                             </p>

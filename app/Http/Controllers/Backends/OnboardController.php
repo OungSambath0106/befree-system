@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backends;
 
+use App\helpers\ImageManager;
 use Exception;
 use App\Models\Onboard;
 use App\Models\Translation;
@@ -78,16 +79,9 @@ class OnboardController extends Controller
             $onboard = new Onboard();
             $onboard->title = $request->title[array_search('en', $request->lang)];
 
-            if ($request->filled('images')) {
-                $onboard->image = $request->images;
-                $directory = public_path('uploads/onboards');
-                if (!File::exists($directory)) {
-                    File::makeDirectory($directory, 0777, true);
-                }
-
-                $image = File::move(public_path('/uploads/temp/' . $request->images), public_path('uploads/onboards/' . $request->images));
+            if ($request->hasFile('image')) {
+                $onboard->image = ImageManager::upload('uploads/onboards/', $request->image);
             }
-
 
             $onboard->save();
 

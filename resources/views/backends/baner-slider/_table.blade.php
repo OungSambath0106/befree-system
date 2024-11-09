@@ -4,6 +4,7 @@
             <tr>
                 <th >#</th>
                 <th>{{ __('Name') }}</th>
+                <th>{{ __('Banner') }}</th>
                 <th>{{ __('Created By') }}</th>
                 <th>{{ __('Status') }}</th>
                 <th>{{ __('Action') }}</th>
@@ -14,6 +15,14 @@
                 <tr>
                     <td>{{ $loop->iteration }}</td>
                     <td>{{ $baner->name }}</td>
+                    <td>
+                        <img width="40%" height="auto" src="
+                        @if ($baner->image && file_exists(public_path('uploads/baner-slider/' . $baner->image))) {{ asset('uploads/baner-slider/' . $baner->image) }}
+                        @else
+                            {{ asset('uploads/image/default.png') }} @endif
+                        "
+                            alt="" class="profile_img_table">
+                    </td>
                     <td>{{ $baner->createdBy->name }}</td>
                     <td>
                         <div class="custom-control custom-switch">

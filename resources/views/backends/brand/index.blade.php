@@ -18,7 +18,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h3>{{ __('Promotion') }}</h3>
+                    <h3>{{ __('Brand') }}</h3>
                 </div>
                 <div class="col-sm-6" style="text-align: right">
                 </div>
@@ -35,21 +35,25 @@
                         <div class="card-header">
                             <div class="row align-items-center">
                                 <div class="col-sm-6">
-                                    <h3 class="card-title">{{ __('Promotion List') }}</h3>
+                                    <h3 class="card-title">{{ __('Brand List') }}</h3>
                                 </div>
-                                {{-- <span class="badge bg-warning total-count">{{ $grades->total() }}</span> --}}
                                 <div class="col-sm-6">
-                                    <a class="btn btn-primary float-right" href="{{ route('admin.promotion.create') }}">
-                                        <i class=" fa fa-plus-circle"></i>
-                                        {{ __('Add New') }}
-                                    </a>
+                                    @if (auth()->user()->can('brand.create'))
+                                        <a class="btn btn-primary btn-modal float-right" href="#"
+                                            data-href="{{ route('admin.brand.create') }}" data-toggle="modal"
+                                            data-container=".modal_form">
+                                            <i class=" fa fa-plus-circle"></i>
+                                            {{ __('Add New') }}
+                                        </a>
+                                    @endif
+
                                 </div>
                             </div>
                         </div>
                         <!-- /.card-header -->
 
                         {{-- table --}}
-                        @include('backends.promotion._table')
+                        @include('backends.brand._table')
 
                     </div>
                 </div>
@@ -93,6 +97,7 @@
             }
             reader.readAsDataURL(this.files[0]);
         });
+
 
         $(document).on('click', '.btn-delete', function(e) {
             e.preventDefault();
@@ -142,8 +147,8 @@
         $('input.status').on('change', function() {
             console.log($(this).data('id'));
             $.ajax({
-                type: "post",
-                url: "{{ route('admin.promotion.update_status') }}",
+                type: "get",
+                url: "{{ route('admin.brand.update_status') }}",
                 data: {
                     "id": $(this).data('id')
                 },

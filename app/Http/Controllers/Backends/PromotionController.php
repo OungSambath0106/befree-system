@@ -19,13 +19,20 @@ class PromotionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         if (!auth()->user()->can('promotion.view')) {
             abort(403, 'Unauthorized action.');
         }
 
         $promotions = Promotion::latest('id')->paginate(10);
+        $promotions = Promotion::when($request->start_date && $request->end_date, function ($query) use ($request) {
+            $query->whereDate('start_date', '=', $request->start_date)
+                ->whereDate('end_date', '=', $request->end_date);
+        })
+            ->latest('id')
+            ->paginate(10);
+
         return view('backends.promotion.index', compact('promotions'));
     }
 

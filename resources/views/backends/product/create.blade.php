@@ -1,22 +1,27 @@
 @extends('backends.master')
 @section('contents')
+    <style>
+        .select2-container--default .select2-selection--multiple .select2-selection__rendered li:first-child.select2-search.select2-search--inline .select2-search__field {
+            height: 29px !important;
+        }
+    </style>
     <!-- Content Wrapper. Contains page content -->
     <section class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1>{{ __('Add New Promotion') }}</h1>
+                    <h1>{{ __('Add New Product') }}</h1>
                 </div>
             </div>
         </div>
     </section>
-    <!-- Main content -->
+    <!-- /.content -->
     <section class="content">
         <div class="container-fluid">
             <div class="row">
                 <!-- left column -->
                 <div class="col-md-12">
-                    <form method="POST" action="{{ route('admin.promotion.store') }}" enctype="multipart/form-data">
+                    <form method="POST" action="{{ route('admin.product.store') }}" enctype="multipart/form-data">
                         @csrf
                         <!-- general form elements -->
                         <div class="card card-primary">
@@ -25,7 +30,6 @@
                                 <div class="row">
                                     <div class="col-12">
                                         <ul class="nav nav-tabs" id="custom-content-below-tab" role="tablist">
-                                            {{-- @dump($language) --}}
                                             @foreach (json_decode($language, true) as $lang)
                                                 @if ($lang['status'] == 1)
                                                     <li class="nav-item">
@@ -48,14 +52,13 @@
                                                             <div class="form-group col-md-12">
                                                                 <input type="hidden" name="lang[]"
                                                                     value="{{ $lang['code'] }}">
-                                                                <label for="title_{{ $lang['code'] }}">{{ __('Title') }}
-                                                                    ({{ strtoupper($lang['code']) }})
-                                                                </label>
-                                                                <input type="text" id="title_{{ $lang['code'] }}"
-                                                                    class="form-control @error('title') is-invalid @enderror"
-                                                                    name="title[]" placeholder="{{ __('Enter Title') }}"
+                                                                <label
+                                                                    for="name_{{ $lang['code'] }}">{{ __('Name') }}({{ strtoupper($lang['code']) }})</label>
+                                                                <input type="name" id="name_{{ $lang['code'] }}"
+                                                                    class="form-control @error('name') is-invalid @enderror"
+                                                                    name="name[]" placeholder="{{ __('Enter Name') }}"
                                                                     value="">
-                                                                @error('title')
+                                                                @error('name')
                                                                     <span class="invalid-feedback" role="alert">
                                                                         <strong>{{ $message }}</strong>
                                                                     </span>
@@ -63,15 +66,15 @@
                                                             </div>
                                                             <div class="form-group col-md-12">
                                                                 <label
-                                                                    for="short_description_{{ $lang['code'] }}">{{ __('Description') }}
+                                                                    for="description_{{ $lang['code'] }}">{{ __('Description') }}
                                                                     ({{ strtoupper($lang['code']) }})</label>
                                                                 <textarea type="text"
-                                                                    id="short_description_{{ $lang['code'] }}"
-                                                                    class="form-control @error('short_description') is-invalid @enderror"
-                                                                    name="short_description[]"
-                                                                    placeholder="{{ __('Enter short_description') }}"
+                                                                    id="description_{{ $lang['code'] }}"
+                                                                    class="form-control @error('description') is-invalid @enderror"
+                                                                    name="description[]"
+                                                                    placeholder="{{ __('Enter description') }}"
                                                                     value=""></textarea>
-                                                                @error('short_description')
+                                                                @error('description')
                                                                     <span class="invalid-feedback" role="alert">
                                                                         <strong>{{ $message }}</strong>
                                                                     </span>
@@ -82,8 +85,6 @@
                                                 @endif
                                             @endforeach
                                         </div>
-
-
                                     </div>
                                 </div>
                             </div>
@@ -94,21 +95,57 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
+                                    <div class="form-group col-md-6 ">
+                                        <label class="required_lable" for="brand">{{ __('Brand') }}</label>
+                                        <select name="brand_id" id="brand"
+                                            class="form-control select2 @error('brand_id') is-invalid @enderror">
+                                            <option value="">{{ __('Select Brand') }}</option>
+                                            @foreach ($brands as $item)
+                                                <option value="{{ $item -> id }}">{{ $item -> name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('brand')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-6 ">
+                                        <label class="required_lable" for="qty">{{ __('Quantity') }}</label>
+                                        <input type="number" name="qty" id="qty" min="0"  class="form-control @error('qty') is-invalid @enderror"
+                                        step="any" value="{{ old('qty') }}" oninput="this.value = this.value.replace(/^0+(?!$)/, '').replace(/\..*/, '')"></input>
+                                        @error('qty')
+                                        <span class="invalid-feedback" role="alert">
+                                            <strong>{{ $message }}</strong>
+                                        </span>
+                                        @enderror
+                                    </div>
                                     <div class="form-group col-md-6">
-                                        <label class="required_lable">{{__('Start Date')}}</label>
-                                        <input type="date" class="form-control @error('start_date') is-invalid @enderror" value="{{ old('start_date') }}"
-                                               name="start_date" >
-                                        @error('start_date')
+                                        <label class="required_label" for="size">{{ __('Size') }}</label>
+                                        <select name="size[]" id="size" multiple class="form-control select2 @error('size') is-invalid @enderror">
+                                            @for ($size = 35; $size <= 45; $size += 0.5)
+                                                <option value="{{ $size }}">{{ __('Size ') . $size }}</option>
+                                            @endfor
+                                        </select>
+                                        @error('size')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
                                         @enderror
                                     </div>
-                                    <div class="form-group col-md-6">
-                                        <label class="required_lable">{{__('End Date')}}</label>
-                                        <input type="date" class="form-control @error('end_date') is-invalid @enderror" value="{{ old('end_date') }}"
-                                               name="end_date" >
-                                        @error('end_date')
+                                    <div class="form-group col-md-6 ">
+                                        <label class="required_lable" for="price">{{ __('Price') }}</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                            </div>
+                                            <input type="number" name="price" id="price" min="0" oninput="validatePriceInput(this)" onkeydown="preventMinus(event)"
+                                                class="form-control @error('price') is-invalid @enderror" step="any"
+                                                value="{{ old('price') }}">
+                                        </div>
+
+                                        @error('price')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
                                             </span>
@@ -116,26 +153,23 @@
                                     </div>
                                     <div class="form-group col-md-6">
                                         <div class="form-group">
-                                            <label for="exampleInputFile">{{ __('Banner') }}</label>
+                                            <label for="exampleInputFile">{{ __('Image') }}</label>
                                             <div class="input-group">
                                                 <div class="custom-file">
-                                                    <input type="hidden" name="banners"
-                                                        class="banner_hidden">
-                                                    <input type="file" class="custom-file-input header-file-input"
-                                                        id="exampleInputFile" name="banner"
-                                                        accept="image/png, image/jpeg">
+                                                    <input type="hidden" name="images" class="image_hidden">
+                                                    <input type="file" class="custom-file-input image-file-input"
+                                                        id="exampleInputFile" name="image" accept="image/png, image/jpeg">
                                                     <label class="custom-file-label"
-                                                        for="exampleInputFile">{{ __('Choose Banner') }}</label>
+                                                        for="exampleInputFile">{{ __('Choose Image') }}</label>
                                                 </div>
                                             </div>
                                             <div class="preview preview-multiple text-center border rounded mt-2"
                                                 style="height: 150px">
-                                                <img src="{{ asset('uploads/defualt.png') }}" alt=""
+                                                <img src="{{ asset('uploads/image/default.png') }}" alt=""
                                                     height="100%">
                                             </div>
                                         </div>
                                     </div>
-
                                 </div>
                             </div>
                         </div>
@@ -153,13 +187,12 @@
             <!-- /.row -->
         </div><!-- /.container-fluid -->
     </section>
-    <!-- /.content -->
 @endsection
 
 @push('js')
     <script>
         const compressor = new window.Compress();
-        $('.header-file-input').change(function(e) {
+        $('.custom-file-input').change(function(e) {
             compressor.compress([...e.target.files], {
                 size: 4,
                 quality: 0.75,
@@ -203,51 +236,6 @@
                 });
             });
         });
-        $('.footer-file-input').change(function(e) {
-            compressor.compress([...e.target.files], {
-                size: 4,
-                quality: 0.75,
-            }).then((output) => {
-                var files = Compress.convertBase64ToFile(output[0].data, output[0].ext);
-                var formData = new FormData();
-
-                var image_names_hidden = $(this).closest('.custom-file').find('input[type=hidden]');
-                var container = $(this).closest('.form-group').find('.preview');
-                if (container.find('img').attr('src') === `{{ asset('uploads/image/default.png') }}`) {
-                    container.empty();
-                }
-                formData.append('image', files);
-
-                $.ajax({
-                    url: "{{ route('save_temp_file') }}",
-                    type: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(response) {
-                        console.log(response);
-                        if (response.status == 0) {
-                            toastr.error(response.msg);
-                        }
-                        if (response.status == 1) {
-                            container.empty();
-                            var temp_file = response.temp_files;
-                            var img_container = $('<div></div>').addClass('img_container');
-                            var img = $('<img>').attr('src', "{{ asset('uploads/temp') }}" +
-                                '/' + temp_file);
-                            img_container.append(img);
-                            container.append(img_container);
-
-                            var new_file_name = temp_file;
-                            console.log(new_file_name);
-
-                            image_names_hidden.val(new_file_name);
-                        }
-                    }
-                });
-            });
-        });
-
 
         $(document).on('click', '.nav-tabs .nav-link', function(e) {
             if ($(this).data('lang') != 'en') {
@@ -256,5 +244,20 @@
                 $('.no_translate_wrapper').removeClass('d-none');
             }
         });
+    </script>
+    <script>
+        // Function to prevent negative values
+        function validatePriceInput(input) {
+            if (input.value < 0) {
+                input.value = '';
+            }
+        }
+
+        // Function to prevent typing the minus (-) key
+        function preventMinus(event) {
+            if (event.key === '-' || event.key === '+') {
+                event.preventDefault();
+            }
+        }
     </script>
 @endpush
