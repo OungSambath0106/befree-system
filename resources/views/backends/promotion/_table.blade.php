@@ -3,7 +3,7 @@
         <thead>
             <tr>
                 <th>#</th>
-                <th>{{ __('Discount Percent') }}</th>
+                <th>{{ __('Discount Type') }}</th>
                 <th>{{ __('Title') }}</th>
                 <th>{{ __('Banner') }}</th>
                 <th>{{ __('Start Date') }}</th>
@@ -16,8 +16,8 @@
             @foreach ($promotions as $item)
                 <tr>
                     <td>{{ $loop->iteration }}</td>
-                    <td>{{ $item->title }}</td>
-                    <td>{{ $item->title }}</td>
+                    <td>{{ $item->discount_type ?? 'Null' }}</td>
+                    <td>{{ $item->title ?? 'Null' }}</td>
                     <td>
                         <img width="90%" height="auto" src="
                         @if ($item->banner && file_exists(public_path('uploads/promotions/' . $item->banner))) {{ asset('uploads/promotions/' . $item->banner) }}
@@ -26,8 +26,8 @@
                         "
                         alt="" class="profile_img_table" style="object-fit: cover">
                     </td>
-                    <td>{{ $item->start_date }}</td>
-                    <td>{{ $item->end_date }}</td>
+                    <td> {{ \Carbon\Carbon::parse($item->start_date)->format('F d, Y') }} </td>
+                    <td> {{ \Carbon\Carbon::parse($item->end_date)->format('F d, Y') }} </td>
                     <td>
                         <div class="custom-control custom-switch">
                             <input type="checkbox" class="custom-control-input switcher_input status"

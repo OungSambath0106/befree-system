@@ -5,8 +5,10 @@
                 <th>#</th>
                 <th>{{ __('Image') }}</th>
                 <th class="">{{ __('Name') }}</th>
+                <th>{{ __('Quantity') }}</th>
                 <th>{{ __('Category') }}</th>
                 <th>{{ __('Created By') }}</th>
+                <th>{{ __('Status') }}</th>
                 <th>{{ __('Action') }}</th>
             </tr>
         </thead>
@@ -27,8 +29,17 @@
                             {{ $product->name ?? 'Null' }}
                         </span>
                     </td>
+                    <td>{{ $product->qty ?? 'Null' }}</td>
                     <td>{{ $product->brand->name ?? 'Null' }}</td>
                     <td>{{ $product->createdBy->name ?? 'Null' }}</td>
+                    <td>
+                        <div class="custom-control custom-switch">
+                            <input type="checkbox" class="custom-control-input switcher_input status"
+                                id="status_{{ $product->id }}" data-id="{{ $product->id }}"
+                                {{ $product->status == 1 ? 'checked' : '' }} name="status">
+                            <label class="custom-control-label" for="status_{{ $product->id }}"></label>
+                        </div>
+                    </td>
                     <td>
                         @if (auth()->user()->can('product.edit'))
                             <a href="{{ route('admin.product.edit', $product->id) }}"

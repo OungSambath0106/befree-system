@@ -1,5 +1,10 @@
 @extends('backends.master')
 @section('contents')
+    <style>
+        .select2-container--default .select2-selection--multiple .select2-selection__rendered li:first-child.select2-search.select2-search--inline .select2-search__field {
+            height: 29px !important;
+        }
+    </style>
     <!-- Content Wrapper. Contains page content -->
     <section class="content-header">
         <div class="container-fluid">
@@ -63,15 +68,15 @@
                                                             </div>
                                                             <div class="form-group col-md-12">
                                                                 <label
-                                                                    for="short_description_{{ $lang['code'] }}">{{ __('Description') }}
+                                                                    for="description_{{ $lang['code'] }}">{{ __('Description') }}
                                                                     ({{ strtoupper($lang['code']) }})</label>
                                                                 <textarea type="text"
-                                                                    id="short_description_{{ $lang['code'] }}"
-                                                                    class="form-control @error('short_description') is-invalid @enderror"
-                                                                    name="short_description[]"
-                                                                    placeholder="{{ __('Enter short_description') }}"
+                                                                    id="description_{{ $lang['code'] }}"
+                                                                    class="form-control @error('description') is-invalid @enderror"
+                                                                    name="description[]"
+                                                                    placeholder="{{ __('Enter Description') }}"
                                                                     value=""></textarea>
-                                                                @error('short_description')
+                                                                @error('description')
                                                                     <span class="invalid-feedback" role="alert">
                                                                         <strong>{{ $message }}</strong>
                                                                     </span>
@@ -95,9 +100,96 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="form-group col-md-6">
-                                        <label class="required_lable">{{__('Start Date')}}</label>
+                                        <label class="required_label" for="promotion_type">{{ __('Promotion Type') }}</label>
+                                        <select name="promotion_type" id="promotion_type" class="form-control select2 @error('Promotion_type') is-invalid @enderror" onchange="togglePromotionFields()">
+                                            <option value="brand" selected>{{ __('By Brand') }}</option>
+                                            <option value="product">{{ __('By Product') }}</option>
+                                        </select>
+                                        @error('promotion_type')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-6" id="product_field">
+                                        <label class="required_label" for="product">{{ __('Promotion by Product') }}</label>
+                                        <select name="products[]" id="product" multiple class="form-control select2 @error('product') is-invalid @enderror">
+                                            @foreach ($products as $product)
+                                                <option value="{{ $product->id }}">{{ $product->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('product')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-6" id="brand_field" style="display: none;">
+                                        <label class="required_label" for="brand">{{ __('Promotion by Brand') }}</label>
+                                        <select name="brands[]" id="brand" multiple class="form-control select2 @error('brand') is-invalid @enderror">
+                                            @foreach ($brands as $brand)
+                                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('brand')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="required_label" for="discount_type">{{ __('Discount Type') }}</label>
+                                        <select name="discount_type" id="discount_type" class="form-control select2 @error('discount_type') is-invalid @enderror" onchange="toggleDiscountFields()">
+                                            <option value="percent" selected>{{ __('Percent') }}</option>
+                                            <option value="amount">{{ __('Amount') }}</option>
+                                        </select>
+                                        @error('discount_type')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group col-md-6" id="percent_field">
+                                        <label class="required_label" for="percent_input">{{ __('Discount Percent') }}</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                            <input type="number" name="percent" id="percent_input" min="0" oninput="validateDiscountInput(this)" onkeydown="preventMinus(event)"
+                                                class="form-control @error('percent') is-invalid @enderror" step="any"
+                                                value="{{ old('percent') }}">
+                                        </div>
+
+                                        @error('percent')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group col-md-6" id="amount_field" style="display: none;">
+                                        <label class="required_label" for="amount_input">{{ __('Discount Amount') }}</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                            </div>
+                                            <input type="number" name="amount" id="amount_input" min="0" oninput="validateDiscountInput(this)" onkeydown="preventMinus(event)"
+                                                class="form-control @error('amount') is-invalid @enderror" step="any"
+                                                value="{{ old('amount') }}">
+                                        </div>
+
+                                        @error('amount')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group col-md-6">
+                                        <label class="required_label">{{__('Start Date')}}</label>
                                         <input type="date" class="form-control @error('start_date') is-invalid @enderror" value="{{ old('start_date') }}"
-                                               name="start_date" >
+                                            name="start_date" >
                                         @error('start_date')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -105,9 +197,9 @@
                                         @enderror
                                     </div>
                                     <div class="form-group col-md-6">
-                                        <label class="required_lable">{{__('End Date')}}</label>
+                                        <label class="required_label">{{__('End Date')}}</label>
                                         <input type="date" class="form-control @error('end_date') is-invalid @enderror" value="{{ old('end_date') }}"
-                                               name="end_date" >
+                                            name="end_date" >
                                         @error('end_date')
                                             <span class="invalid-feedback" role="alert">
                                                 <strong>{{ $message }}</strong>
@@ -256,5 +348,64 @@
                 $('.no_translate_wrapper').removeClass('d-none');
             }
         });
+    </script>
+    <script>
+        function validateDiscountInput(input) {
+            if (input.value < 0) {
+                input.value = '';
+            }
+        }
+
+        function preventMinus(event) {
+            if (event.key === '-' || event.key === '+') {
+                event.preventDefault();
+            }
+        }
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.brand-checkbox').forEach(function (brandCheckbox) {
+                brandCheckbox.addEventListener('change', function () {
+                    const brandId = this.getAttribute('data-brand');
+                    const checked = this.checked;
+
+                    document.querySelectorAll(`.product-checkbox.brand-${brandId}`).forEach(function (productCheckbox) {
+                        productCheckbox.checked = checked;
+                    });
+                });
+            });
+        });
+    </script>
+    <script>
+        function toggleDiscountFields() {
+            var discountType = document.getElementById('discount_type').value;
+            var amountField = document.getElementById('amount_field');
+            var percentField = document.getElementById('percent_field');
+
+            if (discountType === 'percent') {
+                percentField.style.display = 'block';
+                amountField.style.display = 'none';
+            } else {
+                percentField.style.display = 'none';
+                amountField.style.display = 'block';
+            }
+        }
+        window.onload = toggleDiscountFields;
+    </script>
+    <script>
+        function togglePromotionFields() {
+            var promotionType = document.getElementById('promotion_type').value;
+            var brandField = document.getElementById('brand_field');
+            var productField = document.getElementById('product_field');
+
+            if (promotionType === 'brand') {
+                brandField.style.display = 'block';
+                productField.style.display = 'none';
+            } else {
+                brandField.style.display = 'none';
+                productField.style.display = 'block';
+            }
+        }
+        window.onload = togglePromotionFields;
     </script>
 @endpush

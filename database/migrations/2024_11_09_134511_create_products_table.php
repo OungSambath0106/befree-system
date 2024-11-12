@@ -18,7 +18,6 @@ class CreateProductsTable extends Migration
             $table->string('name')->nullable();
             $table->string('description')->nullable();
             $table->unsignedBigInteger('brand_id')->nullable();
-            $table->decimal('price', 11,2)->default(0)->nullable();
             $table->string('image')->nullable();
             $table->unsignedBigInteger('created_by')->nullable();
             $table->softDeletes();

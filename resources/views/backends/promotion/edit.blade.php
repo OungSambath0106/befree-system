@@ -1,5 +1,10 @@
 @extends('backends.master')
 @section('contents')
+    <style>
+        .select2-container--default .select2-selection--multiple .select2-selection__rendered li:first-child.select2-search.select2-search--inline .select2-search__field {
+            height: 29px !important;
+        }
+    </style>
     <!-- Content Wrapper. Contains page content -->
     <section class="content-header">
         <div class="container-fluid">
@@ -51,11 +56,8 @@
                                                             if ($t->locale == $lang['code'] && $t->key == 'title') {
                                                                 $translate[$lang['code']]['title'] = $t->value;
                                                             }
-                                                            if ($t->locale == $lang['code'] && $t->key == 'short_description') {
-                                                                $translate[$lang['code']]['short_description'] = $t->value;
-                                                            }
-                                                            if ($t->locale == $lang['code'] && $t->key == 'content') {
-                                                                $translate[$lang['code']]['content'] = $t->value;
+                                                            if ($t->locale == $lang['code'] && $t->key == 'description') {
+                                                                $translate[$lang['code']]['description'] = $t->value;
                                                             }
                                                         }
                                                     }
@@ -82,12 +84,12 @@
                                                             </div>
                                                             <div class="form-group col-md-12">
                                                                 <label
-                                                                    for="short_description_{{ $lang['code'] }}">{{ __('Description') }}({{ strtoupper($lang['code']) }})</label>
-                                                                <textarea type="text" id="short_description_{{ $lang['code'] }}"
-                                                                    class="form-control @error('short_description') is-invalid @enderror" name="short_description[]"
-                                                                    placeholder="{{ __('Enter Description') }}" value="">{{ $translate[$lang['code']]['short_description'] ?? $promotion['short_description'] }}</textarea>
+                                                                    for="description_{{ $lang['code'] }}">{{ __('Description') }}({{ strtoupper($lang['code']) }})</label>
+                                                                <textarea type="text" id="description_{{ $lang['code'] }}"
+                                                                    class="form-control @error('description') is-invalid @enderror" name="description[]"
+                                                                    placeholder="{{ __('Enter Description') }}" value="">{{ $translate[$lang['code']]['description'] ?? $promotion['description'] }}</textarea>
 
-                                                                @error('short_description')
+                                                                @error('description')
                                                                     <span class="invalid-feedback" role="alert">
                                                                         <strong>{{ $message }}</strong>
                                                                     </span>
@@ -111,6 +113,103 @@
                             <div class="card-body">
                                 <div class="row">
                                     <div class="form-group col-md-6">
+                                        <label class="required_label" for="promotion_type">{{ __('Discount Type') }}</label>
+                                        <select name="promotion_type" id="promotion_type" class="form-control select2 @error('promotion_type') is-invalid @enderror" onchange="toggleDiscountFields()">
+                                            <option value="brand" {{ old('promotion_type', $promotion->promotion_type) == 'brand' ? 'selected' : '' }}>
+                                                {{ __('Brand') }}
+                                            </option>
+                                            <option value="product" {{ old('promotion_type', $promotion->promotion_type) == 'product' ? 'selected' : '' }}>
+                                                {{ __('Product') }}
+                                            </option>
+                                        </select>
+                                        @error('promotion_type')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-6" id="product_field">
+                                        <label class="required_label" for="product">{{ __('Promotion by Product') }}</label>
+                                        <select name="products[]" id="product" multiple class="form-control select2 @error('products') is-invalid @enderror">
+                                            @foreach ($products as $product)
+                                                <option value="{{ $product->id }}"
+                                                    {{ in_array($product->id, old('products', $product_promotionId)) ? 'selected' : '' }}>
+                                                    {{ $product->name }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('product')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-6" id="brand_field" style="display: none;">
+                                        <label class="required_label" for="brand">{{ __('Promotion by Brand') }}</label>
+                                        <select name="brands[]" id="brand" multiple class="form-control select2 @error('brand') is-invalid @enderror">
+                                            @foreach ($brands as $brand)
+                                                <option value="{{ $brand->id }}">{{ $brand->name }}</option>
+                                            @endforeach
+                                        </select>
+                                        @error('brand')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-6">
+                                        <label class="required_label" for="discount_type">{{ __('Discount Type') }}</label>
+                                        <select name="discount_type" id="discount_type" class="form-control select2 @error('discount_type') is-invalid @enderror" onchange="toggleDiscountFields()">
+                                            <option value="percent" {{ old('discount_type', $promotion->discount_type) == 'percent' ? 'selected' : '' }}>
+                                                {{ __('Percent') }}
+                                            </option>
+                                            <option value="amount" {{ old('discount_type', $promotion->discount_type) == 'amount' ? 'selected' : '' }}>
+                                                {{ __('Amount') }}
+                                            </option>
+                                        </select>
+                                        @error('discount_type')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group col-md-6" id="amount_field" style="display: none;">
+                                        <label class="required_label" for="amount_input">{{ __('Discount Amount') }}</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">$</span>
+                                            </div>
+                                            <input type="number" name="amount" id="amount_input" min="0" oninput="validateDiscountInput(this)" onkeydown="preventMinus(event)"
+                                                class="form-control @error('amount') is-invalid @enderror" step="any"
+                                                value="{{ old('amount', $promotion->amount) }}">
+                                        </div>
+
+                                        @error('amount')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group col-md-6" id="percent_field">
+                                        <label class="required_label" for="percent_input">{{ __('Discount Percent') }}</label>
+                                        <div class="input-group">
+                                            <div class="input-group-prepend">
+                                                <span class="input-group-text">%</span>
+                                            </div>
+                                            <input type="number" name="percent" id="percent_input" min="0" oninput="validateDiscountInput(this)" onkeydown="preventMinus(event)"
+                                                class="form-control @error('percent') is-invalid @enderror" step="any"
+                                                value="{{ old('percent', $promotion->percent) }}">
+                                        </div>
+
+                                        @error('percent')
+                                            <span class="invalid-feedback" role="alert">
+                                                <strong>{{ $message }}</strong>
+                                            </span>
+                                        @enderror
+                                    </div>
+                                    <div class="form-group col-md-6">
                                         <label class="required_lable">{{ __('Start Date') }}</label>
                                         <input type="date" class="form-control @error('start_date') is-invalid @enderror"
                                             value="{{ old('start_date', $promotion->start_date) }}" name="start_date">
@@ -132,21 +231,21 @@
                                     </div>
                                     <div class="form-group col-md-6">
                                         <div class="form-group">
-                                            <label for="exampleInputFile">{{ __('Header_Banner') }}</label>
+                                            <label for="exampleInputFile">{{ __('Banner') }}</label>
                                             <div class="input-group">
                                                 <div class="custom-file">
                                                     <input type="file" class="custom-file-input header-file-input"
-                                                        id="exampleInputFile" name="header_banner"
+                                                        id="exampleInputFile" name="banner"
                                                         accept="image/png, image/jpeg">
                                                     <label class="custom-file-label"
-                                                        for="exampleInputFile">{{ $promotion->header_banner ?? __('Choose Image') }}</label>
+                                                        for="exampleInputFile">{{ $promotion->banner ?? __('Choose Image') }}</label>
                                                 </div>
                                             </div>
                                             <div class="preview text-center border rounded mt-2" style="height: 150px">
                                                 <img src="
-                                                @if ($promotion->header_banner && file_exists(public_path('uploads/promotions/' . $promotion->header_banner))) {{ asset('uploads/promotions/' . $promotion->header_banner) }}
+                                                @if ($promotion->banner && file_exists(public_path('uploads/promotions/' . $promotion->banner))) {{ asset('uploads/promotions/' . $promotion->banner) }}
                                                 @else
-                                                    {{ asset('uploads/image/default.png') }} @endif
+                                                    {{ asset('uploads/defualt.png') }} @endif
                                                 "
                                                     alt="" height="100%">
                                             </div>
@@ -190,5 +289,50 @@
                 $('.no_translate_wrapper').removeClass('d-none');
             }
         });
+    </script>
+    <script>
+        function validateDiscountInput(input) {
+            if (input.value < 0) {
+                input.value = '';
+            }
+        }
+
+        function preventMinus(event) {
+            if (event.key === '-' || event.key === '+') {
+                event.preventDefault();
+            }
+        }
+    </script>
+    <script>
+        function toggleDiscountFields() {
+            var discountType = document.getElementById('discount_type').value;
+            var amountField = document.getElementById('amount_field');
+            var percentField = document.getElementById('percent_field');
+
+            if (discountType === 'percent') {
+                percentField.style.display = 'block';
+                amountField.style.display = 'none';
+            } else {
+                percentField.style.display = 'none';
+                amountField.style.display = 'block';
+            }
+        }
+        window.onload = toggleDiscountFields;
+    </script>
+    <script>
+        function togglePromotionFields() {
+            var promotionType = document.getElementById('promotion_type').value;
+            var brandField = document.getElementById('brand_field');
+            var productField = document.getElementById('product_field');
+
+            if (promotionType === 'brand') {
+                brandField.style.display = 'block';
+                productField.style.display = 'none';
+            } else {
+                brandField.style.display = 'none';
+                productField.style.display = 'block';
+            }
+        }
+        window.onload = togglePromotionFields;
     </script>
 @endpush

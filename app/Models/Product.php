@@ -15,10 +15,12 @@ class Product extends Model
 
     use SoftDeletes;
 
+    protected $appends = ['image_url'];
+
     protected $guarded = ['id'];
 
     protected $casts = [
-        'size' => 'array',
+        'product_info' => 'array'
     ];
 
     public function getNameAttribute($name)

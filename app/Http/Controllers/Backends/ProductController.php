@@ -48,7 +48,6 @@ class ProductController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'brand_id' => 'required',
-            'price' => 'required|numeric',
         ]);
 
         if (is_null($request->name[array_search('en', $request->lang)])) {
@@ -79,27 +78,35 @@ class ProductController extends Controller
             // dd($request->all());
             DB::beginTransaction();
 
-            $product = new Product;
-            $product->name = $request->name[array_search('en', $request->lang)];
-            $product->description = $request->description[array_search('en', $request->lang)];
-            $product->brand_id = $request->brand_id;
-            $product->qty = $request->qty;
-            $product->size = $request->input('size');
-            $product->price = $request->price;
-            $product->created_by = auth()->user()->id;
+            $pro = new Product;
+            $pro->name = $request->name[array_search('en', $request->lang)];
+            $pro->description = $request->description[array_search('en', $request->lang)];
+            $pro->brand_id = $request->brand_id;
+            $pro->created_by = auth()->user()->id;
 
-            if ($request->hasFile('image')) {
-                $product->image = ImageManager::upload('uploads/products/', $request->image);
+            $products_info = [];
+            if ($request->products_info) {
+                foreach ($request->products_info['product_size'] as $key => $number) {
+                    $item['product_size'] = $number;
+                    $item['product_price'] = number_format((float)$request->products_info['product_price'][$key], 2, '.', '');
+                    $item['product_qty'] = $request->products_info['product_qty'][$key];
+                    array_push($products_info, $item);
+                }
+                $pro->product_info =$products_info;
             }
 
-            $product->save();
+            if ($request->hasFile('image')) {
+                $pro->image = ImageManager::upload('uploads/products/', $request->image);
+            }
+
+            $pro->save();
 
             $data = [];
             foreach ($request->lang as $index => $key) {
                 if ($request->name[$index] && $key != 'en') {
                     array_push($data, array(
                         'translationable_type' => 'App\Models\Product',
-                        'translationable_id' => $product->id,
+                        'translationable_id' => $pro->id,
                         'locale' => $key,
                         'key' => 'name',
                         'value' => $request->name[$index],
@@ -108,7 +115,7 @@ class ProductController extends Controller
                 if ($request->description[$index] && $key != 'en') {
                     array_push($data, array(
                         'translationable_type' => 'App\Models\Product',
-                        'translationable_id' => $product->id,
+                        'translationable_id' => $pro->id,
                         'locale' => $key,
                         'key' => 'description',
                         'value' => $request->description[$index],
@@ -167,7 +174,6 @@ class ProductController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             'brand_id' => 'required',
-            'price' => 'required|numeric',
         ]);
 
         // dd($validator);
@@ -204,9 +210,17 @@ class ProductController extends Controller
             $product->name = $request->name[array_search('en', $request->lang)];
             $product->description = $request->description[array_search('en', $request->lang)];
             $product->brand_id = $request->brand_id;
-            $product->qty = $request->qty;
-            $product->size = $request->input('size');
-            $product->price = $request->price;
+
+            $products_info = [];
+            if ($request->products_info) {
+                foreach ($request->products_info['product_size'] as $key => $number) {
+                    $item['product_size'] = $number;
+                    $item['product_price'] = number_format((float)$request->products_info['product_price'][$key], 2, '.', '');
+                    $item['product_qty'] = $request->products_info['product_qty'][$key];
+                    array_push($products_info, $item);
+                }
+                $product->product_info =$products_info;
+            }
 
             if ($request->hasFile('image')) {
                 if ($product->image && file_exists(public_path('uploads/products/' . $product->image))) {
@@ -290,6 +304,27 @@ class ProductController extends Controller
                 'status' => 0,
                 'msg' => __('Something went wrong')
             ];
+        }
+
+        return response()->json($output);
+    }
+
+    public function updateStatus(Request $request)
+    {
+        try {
+            DB::beginTransaction();
+
+            $product = Product::findOrFail($request->id);
+            $product->status = $product->status == 1 ? 0 : 1;
+            $product->save();
+
+            $output = ['status' => 1, 'msg' => __('Status updated')];
+
+            DB::commit();
+        } catch (Exception $e) {
+
+            $output = ['status' => 0, 'msg' => __('Something went wrong')];
+            DB::rollBack();
         }
 
         return response()->json($output);

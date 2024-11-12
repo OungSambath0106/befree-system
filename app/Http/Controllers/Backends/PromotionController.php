@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Backends;
 
+use App\helpers\ImageManager;
 use Exception;
 use App\Models\Promotion;
 use App\Models\Translation;
@@ -9,6 +10,8 @@ use Illuminate\Http\Request;
 use App\Models\BusinessSetting;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Brand;
+use App\Models\Product;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Validator;
 
@@ -44,10 +47,12 @@ class PromotionController extends Controller
     public function create()
     {
         $language = BusinessSetting::where('type', 'language')->first();
+        $brands = Brand::with('products')->get();
+        $products = Product::where('status', 1)->orderBy('name')->get();
         $language = $language->value ?? null;
         $default_lang = 'en';
         $default_lang = json_decode($language, true)[0]['code'];
-        return view('backends.promotion.create', compact('language', 'default_lang'));
+        return view('backends.promotion.create', compact('brands', 'products', 'language', 'default_lang'));
     }
 
     /**
@@ -72,7 +77,16 @@ class PromotionController extends Controller
                 );
             });
         }
-        
+
+        if (is_null($request->description[array_search('en', $request->lang)])) {
+            $validator->after(function ($validator) {
+                $validator->errors()->add(
+                    'description',
+                    'description field is required!'
+                );
+            });
+        }
+
         if ($validator->fails()) {
             return redirect()->back()
                 ->withErrors($validator)
@@ -83,11 +97,16 @@ class PromotionController extends Controller
         try {
             DB::beginTransaction();
 
+            // dd($request->all());
             $promotion = new Promotion();
             $promotion->title = $request->title[array_search('en', $request->lang)];
+            $promotion->description = $request->description[array_search('en', $request->lang)];
+            $promotion->discount_type = $request->discount_type;
+            $promotion->percent = $request->percent;
+            $promotion->amount = $request->amount;
             $promotion->start_date = $request->start_date;
             $promotion->end_date = $request->end_date;
-
+            $promotion->promotion_type = $request->promotion_type;
 
             if ($request->filled('banners')) {
                 $promotion->banner = $request->banners;
@@ -100,6 +119,16 @@ class PromotionController extends Controller
             }
 
             $promotion->save();
+
+            if ($request->filled('products')) {
+                $productIds = $request->products;
+                $promotion->products()->attach($productIds);
+            }
+
+            if ($request->filled('brands')) {
+                $brandIds = $request->brands;
+                $promotion->brands()->attach($brandIds);
+            }
 
 
             $data = [];
@@ -153,11 +182,24 @@ class PromotionController extends Controller
     public function edit($id)
     {
         $promotion = Promotion::withoutGlobalScopes()->with('translations')->findOrFail($id);
+
+        $brands = Brand::with('products')->get();
+        $brand_promotionId = [];
+        if ($promotion->brands && $promotion->brands->count() > 0) {
+            $brand_promotionId = $promotion->brands->pluck('id')->toArray();
+        }
+
+        $products = Product::where('status', 1)->orderBy('name')->get();
+        $product_promotionId = [];
+        if ($promotion->products && $promotion->products->count() > 0) {
+            $product_promotionId = $promotion->products->pluck('id')->toArray();
+        }
+        
         $language = BusinessSetting::where('type', 'language')->first();
         $language = $language->value ?? null;
         $default_lang = 'en';
         $default_lang = json_decode($language, true)[0]['code'];
-        return view('backends.promotion.edit', compact('promotion', 'language', 'default_lang'));
+        return view('backends.promotion.edit', compact('brands', 'products', 'brand_promotionId', 'product_promotionId', 'promotion', 'language', 'default_lang'));
     }
 
     /**
@@ -196,13 +238,33 @@ class PromotionController extends Controller
 
             $promotion =  Promotion::findOrFail($id);
             $promotion->title = $request->title[array_search('en', $request->lang)];
+            $promotion->discount_type = $request->discount_type;
+            $promotion->percent = $request->percent;
+            $promotion->amount = $request->amount;
             $promotion->start_date = $request->start_date;
             $promotion->end_date = $request->end_date;
+            $promotion->promotion_type = $request->promotion_type;
 
             // Update header banner
-            $this->updateImage($request, $promotion, 'banner');
+            if ($request->hasFile('banner')) {
+                if ($promotion->banner && file_exists(public_path('uploads/promotions/' . $promotion->banner))) {
+                    unlink(public_path('uploads/promotions/' . $promotion->banner));
+                }
+
+                $promotion->banner = ImageManager::update('uploads/promotions/', null, $request->banner);
+            }
 
             $promotion->save();
+
+            if ($request->filled('products')) {
+                $productIds = $request->products;
+                $promotion->products()->sync($productIds);
+            }
+
+            if ($request->filled('brands')) {
+                $brandIds = $request->brands;
+                $promotion->brands()->sync($brandIds);
+            }
 
             foreach ($request->lang as $index => $key) {
                 if (isset($request->title[$index]) && $key != 'en') {

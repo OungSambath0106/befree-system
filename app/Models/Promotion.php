@@ -16,12 +16,27 @@ class Promotion extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'products' => 'array',
+        'brands' => 'array',
+    ];
+
     public function getTitleAttribute($title)
     {
         if (strpos(url()->current(), '/admin')) {
             return $title;
         }
         return $this->translations->where('key', 'title')->first()->value ?? $title;
+    }
+
+    public function products()
+    {
+        return $this->belongsToMany(Product::class, 'promotion_product', 'promotion_id', 'product_id');
+    }
+
+    public function brands()
+    {
+        return $this->belongsToMany(Product::class, 'promotion_brand', 'promotion_id', 'brand_id');
     }
 
     public function getBannerUrlAttribute()
@@ -33,7 +48,7 @@ class Promotion extends Model
         }
         return $image_url;
     }
-    
+
     public function translations()
     {
         return $this->morphMany(Translation::class, 'translationable');

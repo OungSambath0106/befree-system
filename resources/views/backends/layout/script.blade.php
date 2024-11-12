@@ -53,6 +53,7 @@
 <script src="{{ asset('backend/plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
 <script src="{{ asset('backend/plugins/daterangepicker/daterangepicker.js') }}"></script>
 <script src="{{ asset('js/compress.js') }}"></script>
+<script src="{{ asset('js/rowfy.js') }}"></script>
 
 {{ Session::has('message') }}
 

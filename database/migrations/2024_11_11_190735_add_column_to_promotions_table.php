@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class AddSomeToProductsTable extends Migration
+class AddColumnToPromotionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,8 @@ class AddSomeToProductsTable extends Migration
      */
     public function up()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->string('qty')->nullable();
-            $table->string('size')->nullable();
+        Schema::table('promotions', function (Blueprint $table) {
+            $table->enum('promotion_type', ['brand', 'product'])->nullable();
         });
     }
 
@@ -26,9 +25,8 @@ class AddSomeToProductsTable extends Migration
      */
     public function down()
     {
-        Schema::table('products', function (Blueprint $table) {
-            $table->dropColumn('qty');
-            $table->dropColumn('size');
+        Schema::table('promotions', function (Blueprint $table) {
+            $table->dropColumn('promotion_type');
         });
     }
 }

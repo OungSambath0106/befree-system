@@ -1,10 +1,5 @@
 @extends('backends.master')
 @section('contents')
-    <style>
-        .select2-container--default .select2-selection--multiple .select2-selection__rendered li:first-child.select2-search.select2-search--inline .select2-search__field {
-            height: 29px !important;
-        }
-    </style>
     <!-- Content Wrapper. Contains page content -->
     <section class="content-header">
         <div class="container-fluid">
@@ -111,47 +106,7 @@
 
                                         @enderror
                                     </div>
-                                    <div class="form-group col-md-6 ">
-                                        <label class="required_lable" for="qty">{{ __('Quantity') }}</label>
-                                        <input type="number" name="qty" id="qty" min="0"  class="form-control @error('qty') is-invalid @enderror"
-                                        step="any" value="{{ old('qty') }}" oninput="this.value = this.value.replace(/^0+(?!$)/, '').replace(/\..*/, '')"></input>
-                                        @error('qty')
-                                        <span class="invalid-feedback" role="alert">
-                                            <strong>{{ $message }}</strong>
-                                        </span>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group col-md-6">
-                                        <label class="required_label" for="size">{{ __('Size') }}</label>
-                                        <select name="size[]" id="size" multiple class="form-control select2 @error('size') is-invalid @enderror">
-                                            @for ($size = 35; $size <= 45; $size += 0.5)
-                                                <option value="{{ $size }}">{{ __('Size ') . $size }}</option>
-                                            @endfor
-                                        </select>
-                                        @error('size')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group col-md-6 ">
-                                        <label class="required_lable" for="price">{{ __('Price') }}</label>
-                                        <div class="input-group">
-                                            <div class="input-group-prepend">
-                                                <span class="input-group-text">$</span>
-                                            </div>
-                                            <input type="number" name="price" id="price" min="0" oninput="validatePriceInput(this)" onkeydown="preventMinus(event)"
-                                                class="form-control @error('price') is-invalid @enderror" step="any"
-                                                value="{{ old('price') }}">
-                                        </div>
-
-                                        @error('price')
-                                            <span class="invalid-feedback" role="alert">
-                                                <strong>{{ $message }}</strong>
-                                            </span>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group col-md-6">
+                                    <div class="form-group col-md-6 mb-2">
                                         <div class="form-group">
                                             <label for="exampleInputFile">{{ __('Image') }}</label>
                                             <div class="input-group">
@@ -165,10 +120,42 @@
                                             </div>
                                             <div class="preview preview-multiple text-center border rounded mt-2"
                                                 style="height: 150px">
-                                                <img src="{{ asset('uploads/image/default.png') }}" alt=""
+                                                <img src="{{ asset('uploads/defualt.png') }}" alt=""
                                                     height="100%">
                                             </div>
                                         </div>
+                                    </div>
+                                    <div class="form-group col-md-12">
+                                        <table class="table table-bordered table-striped table-hover rowfy mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <th class="col-4">Size</th>
+                                                    <th class="col-4">Price</th>
+                                                    <th class="col-4">Quantity</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>
+                                                        <input type="number" class="form-control" min="0" oninput="validatePriceInput(this)" onkeydown="preventMinus(event)"
+                                                            name="products_info[product_size][]">
+                                                    </td>
+                                                    <td>
+                                                        <div class="input-group">
+                                                            <div class="input-group-prepend">
+                                                                <span class="input-group-text">$</span>
+                                                            </div>
+                                                            <input type="number" class="form-control" min="0" oninput="validatePriceInput(this)" onkeydown="preventMinus(event)"
+                                                                name="products_info[product_price][]">
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <input type="number" class="form-control" min="0" oninput="validatePriceInput(this)" onkeydown="preventMinus(event)"
+                                                            name="products_info[product_qty][]">
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
